@@ -1,7 +1,6 @@
-import { createContext, useCallback, useContext, useMemo, useRef, useState } from 'react'
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import type { ReactNode } from 'react'
-
-export type ToastTone = 'success' | 'error' | 'info'
+import { ToastContext, type ToastApi, type ToastTone } from './toast-context'
 
 interface ToastMessage {
   id: number
@@ -9,11 +8,7 @@ interface ToastMessage {
   tone: ToastTone
 }
 
-interface ToastApi {
-  show: (message: string, tone?: ToastTone) => void
-}
-
-const ToastContext = createContext<ToastApi | null>(null)
+const TOAST_LIFETIME_MS = 5000
 
 const TONE_STYLES: Record<ToastTone, string> = {
   success: 'border-[var(--color-ok-500)] bg-[var(--color-ok-50)] text-[var(--color-ok-500)]',
@@ -28,17 +23,30 @@ const TONE_STYLES: Record<ToastTone, string> = {
 export function ToastProvider({ children }: { children: ReactNode }) {
   const [toasts, setToasts] = useState<ToastMessage[]>([])
   const counter = useRef(0)
+  // Pemasa yang belum matang dibatalkan semasa lupus; jika tidak, ia menembak
+  // ke dalam pokok yang telah dilupuskan (dan bocor antara ujian).
+  const timers = useRef(new Set<ReturnType<typeof setTimeout>>())
+
+  useEffect(() => {
+    const pending = timers.current
+    return () => {
+      for (const timer of pending) clearTimeout(timer)
+      pending.clear()
+    }
+  }, [])
 
   const show = useCallback((message: string, tone: ToastTone = 'success') => {
     counter.current += 1
     const id = counter.current
     setToasts((current) => [...current, { id, message, tone }])
-    setTimeout(() => {
+    const timer = setTimeout(() => {
+      timers.current.delete(timer)
       setToasts((current) => current.filter((toast) => toast.id !== id))
-    }, 5000)
+    }, TOAST_LIFETIME_MS)
+    timers.current.add(timer)
   }, [])
 
-  const api = useMemo(() => ({ show }), [show])
+  const api = useMemo<ToastApi>(() => ({ show }), [show])
 
   return (
     <ToastContext.Provider value={api}>
@@ -59,12 +67,4 @@ export function ToastProvider({ children }: { children: ReactNode }) {
       </div>
     </ToastContext.Provider>
   )
-}
-
-export function useToast(): ToastApi {
-  const context = useContext(ToastContext)
-  if (!context) {
-    throw new Error('useToast mesti digunakan di dalam ToastProvider')
-  }
-  return context
 }

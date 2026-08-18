@@ -88,6 +88,29 @@ describe('peringatan dan penunjuk pada langkah akhir', () => {
     expect(await screen.findByText(/Simpanan draf aktif|Draf disimpan dalam pelayar ini/)).toBeInTheDocument()
   })
 
+  it('memberitahu apabila tulisan draf ditolak, bukan mendakwa ia disimpan (§11.1)', async () => {
+    seedDraft(appendixBProject)
+    const { user } = renderApp()
+
+    // Storan penuh atau disekat: simpanan gagal selepas debounce 500 ms.
+    vi.spyOn(Storage.prototype, 'setItem').mockImplementation(() => {
+      throw new Error('QuotaExceededError')
+    })
+
+    await user.type(screen.getByLabelText(/^Arahan tambahan/), 'x')
+
+    expect(await screen.findByText(/Draf gagal disimpan dalam pelayar ini/)).toBeInTheDocument()
+    expect(screen.queryByText(/Draf disimpan dalam pelayar ini/)).not.toBeInTheDocument()
+  })
+
+  it('suis simpanan draf mempunyai nama boleh capai (NFR-004)', () => {
+    seedDraft(appendixBProject)
+    renderApp()
+    expect(
+      screen.getByRole('switch', { name: /Simpan draf dalam pelayar ini/ }),
+    ).toBeInTheDocument()
+  })
+
   it('menyatakan dengan jelas apabila draf tidak disimpan', () => {
     renderApp()
     expect(screen.getByText(/Draf tidak disimpan/)).toBeInTheDocument()

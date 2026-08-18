@@ -41,6 +41,12 @@ export function SaveIndicator() {
           Draf disimpan dalam pelayar ini{time ? ` pada ${time}` : ''}.
         </>
       )}
+      {saveState === 'ralat' && (
+        <span className="text-[var(--color-danger-500)]">
+          <span aria-hidden="true">✕</span> Draf gagal disimpan dalam pelayar ini. Storan mungkin
+          penuh atau disekat. Salin output anda sebelum menutup tab.
+        </span>
+      )}
       {saveState === 'idle' && (
         <>
           <span aria-hidden="true">○</span> Simpanan draf aktif. Perubahan disimpan secara

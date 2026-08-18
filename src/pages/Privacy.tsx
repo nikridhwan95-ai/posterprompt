@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { Button } from '@/components/Button'
 import { ConfirmDialog } from '@/components/ConfirmDialog'
-import { useToast } from '@/components/Toast'
+import { useToast } from '@/components/toast-context'
 import { STORAGE_KEYS, clearAllStorage, hasStoredDraft, readConsent } from '@/lib/storage/draft'
 
 const KEYS = [

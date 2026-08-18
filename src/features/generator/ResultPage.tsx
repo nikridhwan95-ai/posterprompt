@@ -109,7 +109,7 @@ export function ResultPage() {
         </header>
 
         <div className="grid gap-8 lg:grid-cols-[minmax(0,1fr)_18rem]">
-          <main className="flex min-w-0 flex-col gap-6">
+          <div className="flex min-w-0 flex-col gap-6">
             <div className="pp-no-print flex flex-wrap gap-1 border-b border-ink-200" role="tablist" aria-label="Blok output">
               {TABS.map((item, index) => (
                 <button
@@ -177,7 +177,7 @@ export function ResultPage() {
                 />
               )}
             </div>
-          </main>
+          </div>
 
           <aside className="flex min-w-0 flex-col gap-5">
             <div className="pp-card p-4">

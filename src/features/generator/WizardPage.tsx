@@ -150,8 +150,14 @@ export function WizardPage() {
     const anchor = document.createElement('a')
     anchor.href = url
     anchor.download = 'posterprompt-draf.json'
+    // Firefox mengabaikan klik pada anchor yang tiada dalam dokumen, dan
+    // membatalkan muat turun jika URL objek ditarik balik serta-merta. Draf
+    // yang tidak serasi hanya ada satu peluang untuk diselamatkan (§8.5).
+    anchor.style.display = 'none'
+    document.body.appendChild(anchor)
     anchor.click()
-    URL.revokeObjectURL(url)
+    document.body.removeChild(anchor)
+    setTimeout(() => URL.revokeObjectURL(url), 0)
   }, [draftNotice])
 
   return (
@@ -172,7 +178,7 @@ export function WizardPage() {
         )}
 
         <div className="grid gap-8 lg:grid-cols-[minmax(0,1fr)_20rem]">
-          <main className="flex min-w-0 flex-col gap-6">
+          <div className="flex min-w-0 flex-col gap-6">
             <header className="flex flex-col gap-1">
               <p className="text-xs font-semibold tracking-wide text-magenta-600 uppercase">
                 Langkah {index + 1} daripada {STEP_IDS.length}
@@ -235,7 +241,7 @@ export function WizardPage() {
                 </div>
               </div>
             </form>
-          </main>
+          </div>
 
           <aside className="min-w-0">
             {/* Desktop: ringkasan melekat. Tablet dan telefon: boleh dilipat (§5.4). */}

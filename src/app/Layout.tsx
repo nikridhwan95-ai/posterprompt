@@ -55,9 +55,14 @@ export function Layout() {
         </div>
       </header>
 
-      <div id="kandungan-utama" className="flex-1">
+      {/*
+        Landmark <main> tunggal untuk semua laluan, dan sasaran pautan langkau.
+        tabIndex -1 diperlukan kerana elemen bukan interaktif tidak menerima
+        fokus daripada pautan langkau pada sesetengah pelayar (NFR-004).
+      */}
+      <main id="kandungan-utama" tabIndex={-1} className="flex-1">
         <Outlet />
-      </div>
+      </main>
 
       <footer className="pp-no-print border-t border-ink-200 bg-white">
         <div className="mx-auto flex w-full max-w-6xl flex-wrap items-center justify-between gap-x-6 gap-y-2 px-4 py-6 text-xs text-ink-500 sm:px-6">

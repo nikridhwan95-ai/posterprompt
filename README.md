@@ -134,7 +134,7 @@ turun teksnya sebelum memadam.
 
 ## Ujian
 
-192 ujian merentas 12 fail.
+200 ujian merentas 12 fail.
 
 - **Unit** (persekitaran node) — normalizer, skor ketumpatan termasuk sempadan band, composer dan
   determinismenya, keenam-enam adapter, peraturan negative prompt, audit QA-01…07, pengesanan
@@ -147,6 +147,12 @@ Suite ini turut mengunci beberapa pembetulan yang ditemui semasa audit kepatuhan
 adapter mesti mengekalkan bahagian kekangan berserta arahan tersuai pengguna, tajuk yang hanya
 mengandungi ruang kosong mesti ditolak, dan set semula tidak boleh membenarkan simpanan tertunda
 menulis draf semula selepas kunci dipadam.
+
+Suite ini juga mengunci beberapa pembetulan lanjutan: penunjuk auto-save tidak boleh menyatakan
+"disimpan" apabila localStorage menolak tulisan, draf separuh siap yang kehilangan keseluruhan
+bahagian dilengkapkan dengan nilai lalai sebelum dipulihkan, suis simpanan draf mesti mempunyai
+nama boleh capai, dan setiap laluan mesti mempunyai satu landmark `<main>` yang menjadi sasaran
+pautan langkau.
 
 Fixtures dalam `src/tests/fixtures.ts` meliputi satu projek bagi setiap kategori, satu bagi
 setiap adapter, serta input minimum, biasa, padat dan had maksimum.

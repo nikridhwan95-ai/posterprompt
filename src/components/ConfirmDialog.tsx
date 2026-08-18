@@ -1,4 +1,4 @@
-import { useEffect, useRef } from 'react'
+import { useEffect, useId, useRef } from 'react'
 import { Button } from './Button'
 
 interface ConfirmDialogProps {
@@ -28,6 +28,10 @@ export function ConfirmDialog({
   onCancel,
 }: ConfirmDialogProps) {
   const ref = useRef<HTMLDialogElement>(null)
+  // Dua dialog boleh wujud serentak dalam satu pokok; id tetap akan
+  // menyebabkan tajuk yang salah dibaca oleh pembaca skrin.
+  const titleId = useId()
+  const descriptionId = useId()
 
   useEffect(() => {
     const dialog = ref.current
@@ -51,15 +55,15 @@ export function ConfirmDialog({
         onCancel()
       }}
       onClose={onCancel}
-      aria-labelledby="confirm-title"
-      aria-describedby="confirm-description"
+      aria-labelledby={titleId}
+      aria-describedby={descriptionId}
       className="m-auto w-[min(28rem,calc(100vw-2rem))] rounded-2xl border border-ink-200 p-0 backdrop:bg-ink-900/40"
     >
       <div className="flex flex-col gap-3 p-5">
-        <h2 id="confirm-title" className="text-lg font-bold text-ink-900">
+        <h2 id={titleId} className="text-lg font-bold text-ink-900">
           {title}
         </h2>
-        <p id="confirm-description" className="text-sm leading-relaxed text-ink-600">
+        <p id={descriptionId} className="text-sm leading-relaxed text-ink-600">
           {description}
         </p>
         <div className="mt-2 flex flex-wrap justify-end gap-2">

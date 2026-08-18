@@ -8,9 +8,9 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 npm run dev          # Vite dev server, port 5173
 npm run build        # tsc -b + binaan production ke dist/
 npm run preview      # layan binaan production
-npm run test         # suite penuh (192 ujian, 12 fail)
+npm run test         # suite penuh (200 ujian, 12 fail)
 npm run test:watch   # mod tontonan
-npm run lint         # oxlint src (dua amaran only-export-components sedia ada)
+npm run lint         # oxlint src (bersih — kekalkan begitu)
 npm run typecheck    # tsc --noEmit -p tsconfig.app.json
 ```
 
@@ -90,12 +90,24 @@ menghilangkan input (FR-019). Wizard lima langkah (`kandungan`, `kanvas`, `gaya`
 `platform`) — pemetaan langkah↔medan berada dalam `STEP_FIELDS`/`stepForField` dalam
 `schemas/project.ts`, jadi amaran boleh memaut terus ke langkah yang betul.
 
+Komponen tidak boleh mengeksport apa-apa selain komponen (peraturan
+`react/only-export-components`): hook dan pembantu diletakkan dalam modul berasingan —
+`components/toast-context.ts` untuk `useToast`, `components/choices.ts` untuk `toChoices`.
+
+Shell (`app/Layout.tsx`) memiliki satu-satunya landmark `<main>` dan menjadi sasaran pautan
+langkau; halaman anak tidak boleh menambah `<main>` sendiri.
+
 ### Simpanan draf (`src/lib/storage/draft.ts`)
 
 Tidak aktif secara lalai; menulis hanya selepas persetujuan pengguna, debounce 500 ms, ke tiga
 kunci `posterprompt:{draft,consent,ui}:v1`. Semua akses localStorage dibungkus try/catch.
 Draf daripada versi skema tidak dikenali dipulangkan sebagai `{ status: 'incompatible', raw }`
 supaya pengguna boleh memuat turun teksnya sebelum memadam — jangan buang draf secara senyap.
+Draf separuh siap yang bentuknya masih betul dilengkapkan dengan `defaultProject()` sebelum
+dipulihkan, kerana borang dan `ProjectSummary` membaca setiap bahagian secara langsung.
+
+Kegagalan tulisan tidak boleh disembunyikan: `createDebouncedSaver` melaporkan sama ada tulisan
+berjaya, dan penunjuk auto-save mesti memaparkan keadaan `ralat` apabila ia gagal (§11.1).
 
 ## Versi
 
