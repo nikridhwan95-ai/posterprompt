@@ -12,7 +12,8 @@ import {
   TEXT_ALIGNMENTS,
   subjectPositionForComposition,
 } from '@/data/styles'
-import { CheckGroup, OptionGroup, toChoices } from '@/components/OptionGroup'
+import { CheckGroup, OptionGroup } from '@/components/OptionGroup'
+import { toChoices } from '@/components/choices'
 import { Toggle } from '@/components/OptionCard'
 import { TextField } from '@/components/TextField'
 import { MAX_SUBJECT_COUNT, countZones, type PosterProject } from '@/schemas/project'

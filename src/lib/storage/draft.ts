@@ -7,7 +7,12 @@
  * dalam mod peribadi atau apabila kuota penuh.
  */
 import { SCHEMA_VERSION } from '@/data/version'
-import { posterProjectSchema, type PosterProject, type StepId } from '@/schemas/project'
+import {
+  defaultProject,
+  posterProjectSchema,
+  type PosterProject,
+  type StepId,
+} from '@/schemas/project'
 
 export const STORAGE_KEYS = {
   draft: 'posterprompt:draft:v1',
@@ -125,9 +130,10 @@ export function loadDraft(): DraftLoadResult {
     // melengkapkan medan wajib. Ia dipulihkan sebagai draf biasa selagi
     // bentuknya betul; validasi penuh berlaku semasa penjanaan.
     if (looksLikeProject(candidate)) {
+      const project = withDefaults(candidate)
       return migrated
-        ? { status: 'migrated', project: candidate as unknown as PosterProject, from: version }
-        : { status: 'ok', project: candidate as unknown as PosterProject }
+        ? { status: 'migrated', project, from: version }
+        : { status: 'ok', project }
     }
     return { status: 'incompatible', raw, from: version }
   }
@@ -135,6 +141,29 @@ export function loadDraft(): DraftLoadResult {
   return migrated
     ? { status: 'migrated', project: result.data as PosterProject, from: version }
     : { status: 'ok', project: result.data as PosterProject }
+}
+
+function isSection(value: unknown): value is Record<string, unknown> {
+  return typeof value === 'object' && value !== null && !Array.isArray(value)
+}
+
+/**
+ * Isi bahagian yang hilang daripada draf separuh siap dengan nilai lalai.
+ *
+ * Draf yang lulus `looksLikeProject` boleh tetap kehilangan keseluruhan
+ * bahagian seperti `style` atau `subject`. Borang dan ringkasan projek membaca
+ * bahagian itu secara langsung, jadi memulihkannya tanpa lalai akan
+ * meruntuhkan wizard sebaik ia dipapar. Nilai pengguna sentiasa mengatasi
+ * nilai lalai; tiada apa-apa yang ditulis semula.
+ */
+function withDefaults(candidate: Record<string, unknown>): PosterProject {
+  const base = defaultProject() as unknown as Record<string, unknown>
+  const merged: Record<string, unknown> = { ...base }
+  for (const [key, value] of Object.entries(candidate)) {
+    const fallback = base[key]
+    merged[key] = isSection(fallback) && isSection(value) ? { ...fallback, ...value } : value
+  }
+  return merged as unknown as PosterProject
 }
 
 /** Semakan bentuk minimum sebelum draf separuh siap dipulihkan. */

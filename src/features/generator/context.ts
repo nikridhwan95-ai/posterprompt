@@ -10,8 +10,13 @@ export interface DraftNotice {
   readonly from?: string
 }
 
-/** Keadaan penyimpan draf, dipaparkan sebagai penunjuk auto-save (§5.6). */
-export type SaveState = 'idle' | 'saving' | 'saved'
+/**
+ * Keadaan penyimpan draf, dipaparkan sebagai penunjuk auto-save (§5.6).
+ * `ralat` bermakna localStorage menolak tulisan (kuota penuh atau mod
+ * peribadi) — pengguna mesti diberitahu, bukan dibiarkan menyangka kerjanya
+ * selamat (§11.1).
+ */
+export type SaveState = 'idle' | 'saving' | 'saved' | 'ralat'
 
 export interface GeneratorApi {
   readonly step: StepId

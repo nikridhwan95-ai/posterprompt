@@ -18,6 +18,19 @@ describe('halaman pendaratan (§5.1)', () => {
   })
 })
 
+describe('landmark halaman (NFR-004)', () => {
+  it.each(['/', '/generator', '/privasi', '/laluan-tiada'])(
+    'menyediakan satu landmark utama pada %s',
+    (route) => {
+      renderApp(route)
+      const main = screen.getByRole('main')
+      // Pautan langkau menyasarkan landmark ini, jadi id dan fokus mesti ada.
+      expect(main).toHaveAttribute('id', 'kandungan-utama')
+      expect(main).toHaveAttribute('tabindex', '-1')
+    },
+  )
+})
+
 describe('halaman tidak dijumpai', () => {
   it('memaparkan 404 bagi laluan yang tidak wujud', () => {
     renderApp('/laluan-yang-tiada')

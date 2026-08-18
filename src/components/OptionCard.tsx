@@ -129,7 +129,15 @@ interface ToggleProps {
   hint?: string
 }
 
+/**
+ * Suis on/off. Butang tidak boleh dilabel oleh elemen <label> (butang bukan
+ * elemen yang boleh dilabel), jadi nama boleh capai diberi melalui
+ * aria-labelledby dan teks label menjadi sasaran klik kedua (NFR-004).
+ */
 export function Toggle({ id, checked, onChange, label, hint }: ToggleProps) {
+  const labelId = `${id}-label`
+  const hintId = hint ? `${id}-hint` : undefined
+
   return (
     <div className="flex items-start gap-3">
       <button
@@ -137,6 +145,8 @@ export function Toggle({ id, checked, onChange, label, hint }: ToggleProps) {
         type="button"
         role="switch"
         aria-checked={checked}
+        aria-labelledby={labelId}
+        aria-describedby={hintId}
         onClick={() => onChange(!checked)}
         className={`relative mt-0.5 inline-flex h-6 w-11 shrink-0 rounded-full border-2 border-transparent transition-colors ${
           checked ? 'bg-magenta-500' : 'bg-[var(--color-control)]'
@@ -149,10 +159,20 @@ export function Toggle({ id, checked, onChange, label, hint }: ToggleProps) {
           }`}
         />
       </button>
-      <label htmlFor={id} className="cursor-pointer">
-        <span className="block text-sm font-semibold text-ink-800">{label}</span>
-        {hint && <span className="mt-0.5 block text-xs leading-relaxed text-ink-500">{hint}</span>}
-      </label>
+      <div className="min-w-0">
+        <span
+          id={labelId}
+          onClick={() => onChange(!checked)}
+          className="block cursor-pointer text-sm font-semibold text-ink-800"
+        >
+          {label}
+        </span>
+        {hint && (
+          <span id={hintId} className="mt-0.5 block text-xs leading-relaxed text-ink-500">
+            {hint}
+          </span>
+        )}
+      </div>
     </div>
   )
 }

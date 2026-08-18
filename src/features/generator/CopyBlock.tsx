@@ -1,6 +1,6 @@
 import { useRef, useState } from 'react'
 import { Button } from '@/components/Button'
-import { useToast } from '@/components/Toast'
+import { useToast } from '@/components/toast-context'
 import { copyText } from '@/lib/clipboard'
 
 interface CopyBlockProps {

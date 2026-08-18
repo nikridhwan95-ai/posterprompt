@@ -15,6 +15,7 @@ import {
   writeUiState,
 } from './draft'
 import { appendixBProject } from '@/tests/fixtures'
+import { defaultProject } from '@/schemas/project'
 
 beforeEach(() => {
   localStorage.clear()
@@ -65,6 +66,36 @@ describe('pemulihan draf (UAT-08)', () => {
     saveDraft({ ...appendixBProject, content: { ...appendixBProject.content, personName: '' } })
     const result = loadDraft()
     expect(result.status).toBe('ok')
+  })
+
+  it('melengkapkan bahagian yang hilang daripada draf separuh siap', () => {
+    // Draf lama boleh kehilangan keseluruhan bahagian. Memulihkannya tanpa
+    // lalai akan meruntuhkan wizard yang membaca project.style secara terus.
+    const partial: Record<string, unknown> = { ...appendixBProject }
+    delete partial.style
+    delete partial.subject
+    localStorage.setItem(STORAGE_KEYS.draft, JSON.stringify(partial))
+
+    const result = loadDraft()
+    expect(result.status).toBe('ok')
+    if (result.status !== 'ok') throw new Error('draf sepatutnya dipulihkan')
+    expect(result.project.style.stylePreset).toBe(defaultProject().style.stylePreset)
+    expect(result.project.subject.subjectType).toBe(defaultProject().subject.subjectType)
+    // Kandungan pengguna tetap diutamakan berbanding lalai.
+    expect(result.project.content.mainHeadline).toBe(appendixBProject.content.mainHeadline)
+  })
+
+  it('mengekalkan nilai pengguna dalam bahagian yang tidak lengkap', () => {
+    localStorage.setItem(
+      STORAGE_KEYS.draft,
+      JSON.stringify({ ...appendixBProject, canvas: { preset: 'a4_portrait' } }),
+    )
+
+    const result = loadDraft()
+    expect(result.status).toBe('ok')
+    if (result.status !== 'ok') throw new Error('draf sepatutnya dipulihkan')
+    expect(result.project.canvas.preset).toBe('a4_portrait')
+    expect(result.project.canvas.width).toBe(defaultProject().canvas.width)
   })
 
   it('menandakan draf rosak sebagai tidak serasi, bukan membuangnya senyap (§8.5)', () => {

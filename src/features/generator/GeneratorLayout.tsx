@@ -16,7 +16,7 @@ import {
   writeConsent,
   writeUiState,
 } from '@/lib/storage/draft'
-import { useToast } from '@/components/Toast'
+import { useToast } from '@/components/toast-context'
 import {
   GeneratorContext,
   type DraftNotice,
@@ -112,7 +112,13 @@ export function GeneratorLayout() {
       }
       setSaveState('saving')
       const stamp = new Date().toISOString()
-      saver.save({ ...(values as PosterProject), updatedAt: stamp }, () => {
+      saver.save({ ...(values as PosterProject), updatedAt: stamp }, (written) => {
+        // `written` palsu apabila localStorage menolak tulisan. Menandakan
+        // "disimpan" ketika itu adalah pembohongan kepada pengguna (§11.1).
+        if (!written) {
+          setSaveState('ralat')
+          return
+        }
         setLastSavedAt(stamp)
         setSaveState('saved')
       })
