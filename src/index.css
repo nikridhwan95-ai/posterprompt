@@ -1,0 +1,180 @@
+@import 'tailwindcss';
+
+/*
+  PosterPrompt design tokens.
+  Identiti UI: magenta (aksi utama), biru (navigasi/maklumat), kuning (aksen).
+  Semua pasangan warna teks/latar disemak untuk WCAG 2.2 AA (NFR-004).
+  Nota: palet ini milik antara muka sahaja dan berasingan daripada palet poster
+  yang pengguna pilih di dalam wizard.
+*/
+@theme {
+  --color-magenta-50: #fff0f8;
+  --color-magenta-100: #ffdcf0;
+  --color-magenta-200: #ffb8e0;
+  --color-magenta-300: #ff7fc7;
+  --color-magenta-400: #f03fa5;
+  --color-magenta-500: #d6008c;
+  --color-magenta-600: #b3006f;
+  --color-magenta-700: #8e0058;
+  --color-magenta-800: #6b0042;
+  --color-magenta-900: #47002c;
+
+  --color-blue-50: #eef3ff;
+  --color-blue-100: #dbe4ff;
+  --color-blue-200: #b8c9ff;
+  --color-blue-300: #8aa5ff;
+  --color-blue-400: #5478ff;
+  --color-blue-500: #2b4ef0;
+  --color-blue-600: #1b37c7;
+  --color-blue-700: #142a99;
+  --color-blue-800: #0e1e6e;
+  --color-blue-900: #091347;
+
+  --color-yellow-50: #fffbeb;
+  --color-yellow-100: #fff3c4;
+  --color-yellow-200: #ffe68a;
+  --color-yellow-300: #ffd84d;
+  --color-yellow-400: #ffc800;
+  --color-yellow-500: #e8b400;
+  --color-yellow-600: #b88c00;
+  --color-yellow-700: #8a6800;
+  --color-yellow-800: #5c4500;
+  --color-yellow-900: #2e2200;
+
+  --color-ink-50: #faf9fc;
+  --color-ink-100: #f2f0f7;
+  --color-ink-200: #e4e1ec;
+  --color-ink-300: #cbc6d8;
+  --color-ink-400: #9f98b0;
+  --color-ink-500: #756d88;
+  --color-ink-600: #574f69;
+  --color-ink-700: #3e3750;
+  --color-ink-800: #282237;
+  --color-ink-900: #171224;
+
+  /*
+   * Sempadan kawalan borang. WCAG 2.2 SC 1.4.11 menuntut 3:1 bagi sempadan
+   * komponen UI; ink-300 hanya mencapai 1.67:1 atas putih, manakala nilai ini
+   * mencapai 3.62:1 atas putih dan 3.45:1 atas latar halaman (NFR-004).
+   */
+  --color-control: #8b8399;
+
+  /* Status ketumpatan dan amaran */
+  --color-ok-500: #0f7a4d;
+  --color-ok-50: #e8f7f0;
+  --color-warn-500: #b45309;
+  --color-warn-50: #fff5e8;
+  --color-danger-500: #c0142b;
+  --color-danger-50: #fdeced;
+
+  --font-sans:
+    'Inter', 'Segoe UI Variable Text', 'Segoe UI', system-ui, -apple-system,
+    'Helvetica Neue', Arial, sans-serif;
+  --font-mono:
+    'Cascadia Mono', 'JetBrains Mono', 'SFMono-Regular', Consolas, 'Liberation Mono', monospace;
+
+  --radius-card: 0.875rem;
+}
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+    -webkit-text-size-adjust: 100%;
+  }
+
+  body {
+    margin: 0;
+    min-height: 100dvh;
+    background-color: var(--color-ink-50);
+    color: var(--color-ink-900);
+    font-family: var(--font-sans);
+    font-synthesis-weight: none;
+    text-rendering: optimizeLegibility;
+    /* NFR-003: tiada scroll mendatar pada 360-1440 px */
+    overflow-x: hidden;
+  }
+
+  /* NFR-004: fokus sentiasa kelihatan pada semua kawalan */
+  :focus-visible {
+    outline: 3px solid var(--color-blue-600);
+    outline-offset: 2px;
+    border-radius: 0.25rem;
+  }
+
+  [hidden] {
+    display: none !important;
+  }
+
+  /*
+   * WCAG 2.2 SC 2.4.11 Focus Not Obscured. Header melekat (atas) dan bar CTA
+   * telefon (bawah) boleh menutup elemen yang baru menerima fokus apabila
+   * pelayar menatal kepadanya. Margin tatal ini mengekalkannya kelihatan.
+   */
+  :where(a, button, input, textarea, select, summary, [tabindex]) {
+    scroll-margin-top: 5.5rem;
+    scroll-margin-bottom: 6.5rem;
+  }
+
+  ::selection {
+    background-color: var(--color-magenta-200);
+    color: var(--color-magenta-900);
+  }
+}
+
+@layer components {
+  .pp-card {
+    background-color: #fff;
+    border: 1px solid var(--color-ink-200);
+    border-radius: var(--radius-card);
+  }
+
+  .pp-label {
+    display: block;
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: var(--color-ink-800);
+  }
+
+  .pp-input {
+    display: block;
+    width: 100%;
+    border-radius: 0.625rem;
+    border: 1px solid var(--color-control);
+    background-color: #fff;
+    padding: 0.625rem 0.75rem;
+    font-size: 0.9375rem;
+    color: var(--color-ink-900);
+  }
+
+  .pp-input::placeholder {
+    /* ink-500 memberi 4.88:1 atas putih; ink-400 gagal ambang AA (NFR-004). */
+    color: var(--color-ink-500);
+  }
+
+  .pp-input[aria-invalid='true'] {
+    border-color: var(--color-danger-500);
+    background-color: var(--color-danger-50);
+  }
+
+  .pp-skip-link {
+    position: absolute;
+    left: -9999px;
+    top: 0;
+    z-index: 100;
+  }
+
+  .pp-skip-link:focus {
+    left: 0.5rem;
+    top: 0.5rem;
+    background-color: var(--color-blue-600);
+    color: #fff;
+    padding: 0.5rem 0.875rem;
+    border-radius: 0.5rem;
+  }
+}
+
+@media print {
+  .pp-no-print {
+    display: none !important;
+  }
+}
