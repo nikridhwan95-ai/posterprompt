@@ -138,7 +138,7 @@ export function ResultPage() {
                   className={`-mb-px border-b-2 px-3 py-2 text-sm font-semibold transition-colors ${
                     tab === item.id
                       ? 'border-magenta-500 text-magenta-700'
-                      : 'border-transparent text-ink-600 hover:border-blue-400 hover:text-blue-700'
+                      : 'border-transparent text-ink-600 hover:border-magenta-300 hover:text-magenta-700'
                   }`}
                 >
                   {item.label}

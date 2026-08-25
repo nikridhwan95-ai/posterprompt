@@ -119,7 +119,10 @@ export function StepContent() {
           const isHeadline = fieldName === 'mainHeadline'
           const value = watch(`content.${fieldName}`) ?? ''
           const limit = isHeadline ? MAX_HEADLINE_LENGTH : MAX_BLOCK_LENGTH
-          const warn = isHeadline && value.length > HEADLINE_WARN_LENGTH
+          // Amaran kaunter: ambang lembut tajuk (§10.1) atau 80% daripada had
+          // medan — pada tahap ini kaunter kekal kelihatan walaupun tanpa fokus.
+          const warn =
+            (isHeadline && value.length > HEADLINE_WARN_LENGTH) || value.length >= limit * 0.8
           const error = errors.content?.[fieldName]?.message
           const placeholder = category.fieldPlaceholders?.[fieldName]
           const shared = {

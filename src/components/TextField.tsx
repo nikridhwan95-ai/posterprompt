@@ -1,3 +1,4 @@
+import { useState } from 'react'
 import type { InputHTMLAttributes, TextareaHTMLAttributes } from 'react'
 import { Field } from './Field'
 
@@ -23,6 +24,11 @@ export function TextField({
   counterWarning,
   ...input
 }: TextFieldProps) {
+  // Kaunter aksara hanya dipaparkan semasa medan difokus atau apabila had
+  // hampir dicecah (counterWarning); dua belas baris "0 / 500" yang statik
+  // hanya hingar sebelum pengguna menaip apa-apa (§5.5).
+  const [focused, setFocused] = useState(false)
+
   return (
     <Field
       id={id}
@@ -30,12 +36,20 @@ export function TextField({
       hint={hint}
       required={required}
       error={error}
-      counter={counter}
+      counter={focused || counterWarning ? counter : undefined}
       counterWarning={counterWarning}
     >
       <input
         {...input}
         id={id}
+        onFocus={(event) => {
+          setFocused(true)
+          input.onFocus?.(event)
+        }}
+        onBlur={(event) => {
+          setFocused(false)
+          input.onBlur?.(event)
+        }}
         type={input.type ?? 'text'}
         aria-invalid={error ? true : undefined}
         aria-describedby={
@@ -61,6 +75,8 @@ export function TextAreaField({
   rows = 3,
   ...textarea
 }: TextAreaFieldProps) {
+  const [focused, setFocused] = useState(false)
+
   return (
     <Field
       id={id}
@@ -68,12 +84,20 @@ export function TextAreaField({
       hint={hint}
       required={required}
       error={error}
-      counter={counter}
+      counter={focused || counterWarning ? counter : undefined}
       counterWarning={counterWarning}
     >
       <textarea
         {...textarea}
         id={id}
+        onFocus={(event) => {
+          setFocused(true)
+          textarea.onFocus?.(event)
+        }}
+        onBlur={(event) => {
+          setFocused(false)
+          textarea.onBlur?.(event)
+        }}
         rows={rows}
         aria-invalid={error ? true : undefined}
         aria-describedby={

@@ -134,7 +134,7 @@ turun teksnya sebelum memadam.
 
 ## Ujian
 
-216 ujian merentas 13 fail.
+219 ujian merentas 13 fail.
 
 - **Unit** (persekitaran node) — normalizer, skor ketumpatan termasuk sempadan band, composer dan
   determinismenya, keenam-enam adapter, peraturan negative prompt, audit QA-01…07, pengesanan

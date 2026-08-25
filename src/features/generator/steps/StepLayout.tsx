@@ -1,4 +1,4 @@
-import { Controller, useFormContext } from 'react-hook-form'
+import { Controller, useFormContext, useWatch } from 'react-hook-form'
 import {
   ASSET_ZONES,
   COMPOSITIONS,
@@ -16,6 +16,8 @@ import { CheckGroup, OptionGroup } from '@/components/OptionGroup'
 import { toChoices } from '@/components/choices'
 import { Toggle } from '@/components/OptionCard'
 import { TextField } from '@/components/TextField'
+import { ZonePreview } from '../ZonePreview'
+import { AlignGlyph, CompositionGlyph } from '../swatches'
 import { MAX_SUBJECT_COUNT, countZones, type PosterProject } from '@/schemas/project'
 
 /** Langkah 4: komposisi, subjek dan zon aset (FR-009 hingga FR-011). */
@@ -26,46 +28,71 @@ export function StepLayout() {
   const layout = watch('layout')
   const hasSubject = subjectType !== 'none'
   const zoneCount = countZones(layout)
+  // Pratonton zon melanggan keseluruhan projek supaya setiap klik komposisi,
+  // subjek atau zon terus kelihatan kesannya di tempat keputusan dibuat.
+  const project = useWatch({ control }) as PosterProject
 
   return (
     <div className="flex flex-col gap-8">
-      <Controller
-        control={control}
-        name="layout.composition"
-        render={({ field }) => (
-          <OptionGroup
-            name="layout-composition"
-            legend="Komposisi"
-            value={field.value}
-            columns={2}
-            onChange={(value) => {
-              field.onChange(value)
-              // Komposisi yang menetapkan sisi subjek turut memindahkan
-              // kedudukan subjek supaya prompt kekal konsisten.
-              const side = subjectPositionForComposition(value)
-              if (side) setValue('subject.subjectPosition', side as never)
-            }}
-            choices={toChoices(COMPOSITIONS)}
-            error={errors.layout?.composition?.message}
+      {/*
+        Pilihan komposisi dan pratonton zon dipasangkan sebelah-menyebelah:
+        rangka zon ialah maklum balas terpantas terhadap setiap keputusan
+        susun atur, jadi ia diletakkan di tempat keputusan itu dibuat (FR-023).
+      */}
+      <div className="grid items-start gap-6 md:grid-cols-[minmax(0,1fr)_15rem]">
+        <div className="flex flex-col gap-8">
+          <Controller
+            control={control}
+            name="layout.composition"
+            render={({ field }) => (
+              <OptionGroup
+                name="layout-composition"
+                legend="Komposisi"
+                value={field.value}
+                columns={2}
+                onChange={(value) => {
+                  field.onChange(value)
+                  // Komposisi yang menetapkan sisi subjek turut memindahkan
+                  // kedudukan subjek supaya prompt kekal konsisten.
+                  const side = subjectPositionForComposition(value)
+                  if (side) setValue('subject.subjectPosition', side as never)
+                }}
+                choices={toChoices(
+                  COMPOSITIONS,
+                  undefined,
+                  (composition) => <CompositionGlyph id={composition.id} />,
+                )}
+                error={errors.layout?.composition?.message}
+              />
+            )}
           />
-        )}
-      />
 
-      <Controller
-        control={control}
-        name="layout.textAlignment"
-        render={({ field }) => (
-          <OptionGroup
-            name="layout-alignment"
-            legend="Penjajaran teks"
-            value={field.value}
-            columns={3}
-            onChange={field.onChange}
-            choices={toChoices(TEXT_ALIGNMENTS)}
-            error={errors.layout?.textAlignment?.message}
+          <Controller
+            control={control}
+            name="layout.textAlignment"
+            render={({ field }) => (
+              <OptionGroup
+                name="layout-alignment"
+                legend="Penjajaran teks"
+                value={field.value}
+                columns={3}
+                onChange={field.onChange}
+                choices={toChoices(
+                  TEXT_ALIGNMENTS,
+                  undefined,
+                  (alignment) => <AlignGlyph id={alignment.id} />,
+                )}
+                error={errors.layout?.textAlignment?.message}
+              />
+            )}
           />
-        )}
-      />
+        </div>
+
+        <aside className="pp-card flex flex-col items-center gap-2 p-4 md:sticky md:top-20">
+          <h2 className="self-start text-xs font-bold text-ink-900">Pratonton zon</h2>
+          <ZonePreview project={project} size={200} />
+        </aside>
+      </div>
 
       <section className="flex flex-col gap-5">
         <div>

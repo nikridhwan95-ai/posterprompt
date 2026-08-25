@@ -130,7 +130,7 @@ export function ColorPicker({ colors, onChange, error }: ColorPickerProps) {
                 setLocalError(null)
                 onChange(palette.colors.slice(0, MAX_CUSTOM_COLORS))
               }}
-              className="flex items-center gap-2 rounded-lg border border-ink-200 bg-white px-2 py-1.5 text-xs text-ink-700 hover:border-blue-500 hover:text-blue-700"
+              className="flex items-center gap-2 rounded-lg border border-ink-200 bg-white px-2 py-1.5 text-xs text-ink-700 hover:border-magenta-400 hover:text-magenta-700"
             >
               <span aria-hidden="true" className="flex overflow-hidden rounded border border-ink-300">
                 {palette.colors.map((color) => (

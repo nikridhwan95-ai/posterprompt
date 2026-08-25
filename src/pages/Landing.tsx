@@ -60,7 +60,7 @@ export function Landing() {
           </Link>
           <Link
             to="/privasi"
-            className="inline-flex items-center rounded-lg border border-[var(--color-control)] bg-white px-5 py-3 text-base font-semibold text-ink-800 transition-colors hover:border-blue-600 hover:text-blue-700"
+            className="inline-flex items-center rounded-lg border border-[var(--color-control)] bg-white px-5 py-3 text-base font-semibold text-ink-800 transition-colors hover:border-magenta-500 hover:text-magenta-700"
           >
             Bagaimana data saya dikendalikan?
           </Link>

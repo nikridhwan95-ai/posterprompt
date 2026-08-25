@@ -8,7 +8,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 npm run dev          # Vite dev server, port 5173
 npm run build        # tsc -b + binaan production ke dist/
 npm run preview      # layan binaan production
-npm run test         # suite penuh (216 ujian, 13 fail)
+npm run test         # suite penuh (219 ujian, 13 fail)
 npm run test:watch   # mod tontonan
 npm run lint         # oxlint src (bersih — kekalkan begitu)
 npm run typecheck    # tsc --noEmit -p tsconfig.app.json
@@ -99,6 +99,12 @@ menghilangkan input (FR-019). Wizard lima langkah (`kandungan`, `kanvas`, `gaya`
 Komponen tidak boleh mengeksport apa-apa selain komponen (peraturan
 `react/only-export-components`): hook dan pembantu diletakkan dalam modul berasingan —
 `components/toast-context.ts` untuk `useToast`, `components/choices.ts` untuk `toChoices`.
+
+Kad pilihan visual: swatch SVG/CSS bagi kanvas, komposisi, penjajaran, tipografi dan gaya
+berada dalam `features/generator/swatches.tsx` — semuanya `aria-hidden`, dilukis sebaris
+kerana CSP menghalang aset luar. Warna UI: magenta untuk trek pilihan/aksi, biru untuk
+pautan teks, navigasi dan maklumat sahaja. Kaunter aksara medan hanya dipaparkan semasa
+fokus atau apabila `counterWarning` aktif (≥80% had).
 
 Shell (`app/Layout.tsx`) memiliki satu-satunya landmark `<main>` dan menjadi sasaran pautan
 langkau; halaman anak tidak boleh menambah `<main>` sendiri.

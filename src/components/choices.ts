@@ -21,11 +21,13 @@ export interface Choice {
 export function toChoices<T extends { id: string; label: { ms: string }; hint?: { ms: string } }>(
   presets: readonly T[],
   groupOf?: (preset: T) => string,
+  swatchOf?: (preset: T) => ReactNode,
 ): Choice[] {
   return presets.map((preset) => ({
     id: preset.id,
     label: preset.label.ms,
     hint: preset.hint?.ms,
     group: groupOf?.(preset),
+    swatch: swatchOf?.(preset),
   }))
 }

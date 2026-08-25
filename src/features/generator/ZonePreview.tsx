@@ -8,11 +8,11 @@ import type { PosterProject } from '@/schemas/project'
  * subjek, logo, QR dan footer supaya pengguna nampak kesan pilihan mereka
  * sebelum menjana prompt (§5.5).
  */
-export function ZonePreview({ project }: { project: PosterProject }) {
+export function ZonePreview({ project, size = 220 }: { project: PosterProject; size?: number }) {
   const { width, height } = project.canvas
   const ratio = width / height
-  const boxWidth = ratio >= 1 ? 220 : Math.round(220 * ratio)
-  const boxHeight = ratio >= 1 ? Math.round(220 / ratio) : 220
+  const boxWidth = ratio >= 1 ? size : Math.round(size * ratio)
+  const boxHeight = ratio >= 1 ? Math.round(size / ratio) : size
 
   const colors = effectiveColors(project.style.palettePreset, project.style.customColors)
   const accent = colors[0] ?? '#7A0026'

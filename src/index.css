@@ -67,8 +67,12 @@
   --color-danger-500: #c0142b;
   --color-danger-50: #fdeced;
 
+  /*
+   * Stack sistem sahaja: CSP font-src 'self' (§11.3) menghalang webfont luar,
+   * jadi tiada nama fon yang tidak dimuatkan disenaraikan di sini.
+   */
   --font-sans:
-    'Inter', 'Segoe UI Variable Text', 'Segoe UI', system-ui, -apple-system,
+    'Segoe UI Variable Text', 'Segoe UI', system-ui, -apple-system,
     'Helvetica Neue', Arial, sans-serif;
   --font-mono:
     'Cascadia Mono', 'JetBrains Mono', 'SFMono-Regular', Consolas, 'Liberation Mono', monospace;

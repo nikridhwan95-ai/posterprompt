@@ -32,7 +32,7 @@ export function OptionCard({
       className={`group relative flex cursor-pointer gap-3 rounded-xl border p-3 transition-colors ${
         checked
           ? 'border-magenta-500 bg-magenta-50 ring-1 ring-magenta-500'
-          : 'border-ink-200 bg-white hover:border-blue-400 hover:bg-blue-50/40'
+          : 'border-ink-200 bg-white hover:border-magenta-300 hover:bg-magenta-50/40'
       } ${disabled ? 'cursor-not-allowed opacity-50' : ''} has-[:focus-visible]:outline has-[:focus-visible]:outline-3 has-[:focus-visible]:outline-offset-2 has-[:focus-visible]:outline-blue-600`}
     >
       <input
@@ -48,20 +48,19 @@ export function OptionCard({
       <span
         aria-hidden="true"
         className={`mt-0.5 flex size-4 shrink-0 items-center justify-center rounded-full border-2 ${
-          checked ? 'border-magenta-500' : 'border-[var(--color-control)] group-hover:border-blue-400'
+          checked ? 'border-magenta-500' : 'border-[var(--color-control)] group-hover:border-magenta-300'
         }`}
       >
         {checked && <span className="size-2 rounded-full bg-magenta-500" />}
       </span>
 
+      {swatch}
+
       <span className="min-w-0 flex-1">
-        <span className="flex items-center gap-2">
-          {swatch}
-          <span
-            className={`text-sm font-semibold ${checked ? 'text-magenta-800' : 'text-ink-800'}`}
-          >
-            {label}
-          </span>
+        <span
+          className={`block text-sm font-semibold ${checked ? 'text-magenta-800' : 'text-ink-800'}`}
+        >
+          {label}
         </span>
         {hint && <span className="mt-0.5 block text-xs leading-relaxed text-ink-500">{hint}</span>}
       </span>
@@ -86,7 +85,7 @@ export function CheckCard({ id, checked, onChange, label, hint, disabled }: Chec
       className={`group flex cursor-pointer gap-3 rounded-xl border p-3 transition-colors ${
         checked
           ? 'border-magenta-500 bg-magenta-50 ring-1 ring-magenta-500'
-          : 'border-ink-200 bg-white hover:border-blue-400 hover:bg-blue-50/40'
+          : 'border-ink-200 bg-white hover:border-magenta-300 hover:bg-magenta-50/40'
       } ${disabled ? 'cursor-not-allowed opacity-50' : ''} has-[:focus-visible]:outline has-[:focus-visible]:outline-3 has-[:focus-visible]:outline-offset-2 has-[:focus-visible]:outline-blue-600`}
     >
       <input
@@ -102,7 +101,7 @@ export function CheckCard({ id, checked, onChange, label, hint, disabled }: Chec
         className={`mt-0.5 flex size-4 shrink-0 items-center justify-center rounded border-2 ${
           checked
             ? 'border-magenta-500 bg-magenta-500 text-white'
-            : 'border-[var(--color-control)] group-hover:border-blue-400'
+            : 'border-[var(--color-control)] group-hover:border-magenta-300'
         }`}
       >
         {checked && (
