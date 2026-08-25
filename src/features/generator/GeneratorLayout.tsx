@@ -17,6 +17,8 @@ import {
   writeUiState,
 } from '@/lib/storage/draft'
 import { useToast } from '@/components/toast-context'
+import { labelFor, getCategory } from '@/data/categories'
+import { randomiseProject, type SampleValues } from './randomize'
 import {
   GeneratorContext,
   type DraftNotice,
@@ -88,6 +90,8 @@ export function GeneratorLayout() {
 
   const [saveState, setSaveState] = useState<SaveState>('idle')
   const [lastSavedAt, setLastSavedAt] = useState<string | null>(null)
+  /** Nilai contoh terakhir yang diisi, untuk mengesan medan yang belum diganti. */
+  const [sampleValues, setSampleValues] = useState<SampleValues>({})
 
   const saverRef = useRef(createDebouncedSaver())
   const consentRef = useRef(consent)
@@ -186,6 +190,24 @@ export function GeneratorLayout() {
     }
   }, [methods, toast])
 
+  const surpriseMe = useCallback(() => {
+    const { project, filled } = randomiseProject(methods.getValues())
+    // `reset` dan bukan setValue bagi setiap medan: satu kemas kini bermakna
+    // satu simpanan draf tertunda dan satu render, bukan dua puluh.
+    methods.reset(project, { keepDefaultValues: true })
+    setSampleValues((current) => ({ ...current, ...filled }))
+
+    const names = (Object.keys(filled) as (keyof typeof filled)[]).map(
+      (field) => labelFor(getCategory(project.category), field).ms,
+    )
+    toast.show(
+      names.length > 0
+        ? `Reka bentuk dirawakkan. Teks contoh diisi pada ${names.length} medan: ${names.join(', ')}. Gantikan dengan maklumat sebenar sebelum menyiarkan poster.`
+        : 'Reka bentuk dirawakkan. Teks anda tidak disentuh.',
+      names.length > 0 ? 'info' : 'success',
+    )
+  }, [methods, toast])
+
   const resetProject = useCallback(() => {
     methods.reset(defaultProject())
     setOutput(null)
@@ -198,6 +220,7 @@ export function GeneratorLayout() {
     saverRef.current.cancel()
     setSaveState('idle')
     setLastSavedAt(null)
+    setSampleValues({})
     clearDraft()
     setDraftNotice(null)
     toast.show('Semua medan telah dikembalikan kepada keadaan awal.', 'info')
@@ -226,6 +249,8 @@ export function GeneratorLayout() {
       discardDraft,
       saveState,
       lastSavedAt,
+      surpriseMe,
+      sampleValues,
     }),
     [
       step,
@@ -241,6 +266,8 @@ export function GeneratorLayout() {
       discardDraft,
       saveState,
       lastSavedAt,
+      surpriseMe,
+      sampleValues,
     ],
   )
 

@@ -10,6 +10,7 @@ import type { QualityWarning } from '@/lib/prompt/types'
 import { useGenerator } from './context'
 import { CopyBlock } from './CopyBlock'
 import { DensityMeter } from './DensityMeter'
+import { SampleNotice } from './SampleNotice'
 
 type TabId = 'prompt' | 'teks' | 'negative' | 'layout'
 
@@ -117,6 +118,12 @@ export function ResultPage() {
             </Button>
           </div>
         </header>
+
+        {/*
+          Teks contoh mengandungi tarikh dan tempat rekaan; amaran mesti
+          kelihatan tepat sebelum pengguna menyalin prompt (§11.2).
+        */}
+        <SampleNotice />
 
         <div className="grid gap-8 lg:grid-cols-[minmax(0,1fr)_18rem]">
           <div className="flex min-w-0 flex-col gap-6">

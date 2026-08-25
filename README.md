@@ -43,6 +43,10 @@ npm run dev
 4. **Susun atur** — komposisi, subjek, dan zon logo, penaja, QR serta footer.
 5. **Platform** — adapter sasaran, bahasa arahan, semakan dan penjanaan.
 
+Butang **Kejutkan saya** mengisi medan wajib yang masih kosong dengan teks contoh dan
+merawakkan pilihan visual — berguna untuk mencuba aplikasi tanpa menaip. Teks yang sudah ditaip
+tidak pernah ditimpa, dan setiap medan contoh ditandakan sehingga ia diganti.
+
 Output: **Prompt Utama**, **Teks Tepat**, **Negative Prompt**, **Nota Layout**, berserta meter
 ketumpatan, amaran konflik dan audit kualiti QA-01 hingga QA-07.
 
@@ -134,7 +138,7 @@ turun teksnya sebelum memadam.
 
 ## Ujian
 
-219 ujian merentas 13 fail.
+233 ujian merentas 14 fail.
 
 - **Unit** (persekitaran node) — normalizer, skor ketumpatan termasuk sempadan band, composer dan
   determinismenya, keenam-enam adapter, peraturan negative prompt, audit QA-01…07, pengesanan

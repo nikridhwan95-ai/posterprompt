@@ -8,14 +8,15 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 npm run dev          # Vite dev server, port 5173
 npm run build        # tsc -b + binaan production ke dist/
 npm run preview      # layan binaan production
-npm run test         # suite penuh (219 ujian, 13 fail)
+npm run test         # suite penuh (233 ujian, 14 fail)
 npm run test:watch   # mod tontonan
 npm run lint         # oxlint src (bersih — kekalkan begitu)
 npm run typecheck    # tsc --noEmit -p tsconfig.app.json
 ```
 
-Vitest berjalan dengan dua *project*: `unit` (persekitaran node, `src/{lib,data,schemas}/**/*.test.ts`)
-dan `ui` (jsdom, `src/**/*.test.tsx`, timeout 30s). Untuk menjalankan sebahagian sahaja:
+Vitest berjalan dengan dua *project*: `unit` (persekitaran node,
+`src/{lib,data,schemas,features}/**/*.test.ts`) dan `ui` (jsdom, `src/**/*.test.tsx`,
+timeout 30s). Untuk menjalankan sebahagian sahaja:
 
 ```bash
 npx vitest run --project unit src/lib/prompt/density.test.ts
@@ -108,6 +109,23 @@ fokus atau apabila `counterWarning` aktif (≥80% had).
 
 Shell (`app/Layout.tsx`) memiliki satu-satunya landmark `<main>` dan menjadi sasaran pautan
 langkau; halaman anak tidak boleh menambah `<main>` sendiri.
+
+### Rawak dan teks contoh (`src/features/generator/randomize.ts`)
+
+Butang "Kejutkan saya" ialah **satu-satunya sumber rawak** dalam aplikasi, dan ia sengaja
+diletakkan di lapisan UI: `lib/prompt/**` mesti kekal tulen (NFR-008), jadi jangan sekali-kali
+memindahkan modul ini ke bawahnya. `randomiseProject(project, rng)` menerima rng supaya ujian
+deterministik.
+
+Dua invarian: teks yang sudah ditaip tidak pernah ditimpa (hanya medan wajib yang kosong diisi
+daripada `data/samples.ts`), dan kombinasi rawak dipilih supaya ia tidak terus melanggar §10.3
+— kontras dinaikkan bagi palet cerah, zon bertindih dielakkan, gaya minimalis dihadkan zonnya.
+Kanvas, kategori, bahasa dan platform tidak pernah dirawakkan.
+
+Teks contoh mengandungi tarikh dan nama rekaan, jadi `SampleNotice` menjejakinya sehingga ke
+halaman hasil dan hilang sendiri sebaik medan disunting. Komponen itu melanggan borang dengan
+`useWatch` sendiri — jangan alihkan langganan itu ke `GeneratorLayout`, kerana ia akan me-render
+semula seluruh wizard pada setiap ketukan kekunci (NFR-001).
 
 ### Simpanan draf (`src/lib/storage/draft.ts`)
 

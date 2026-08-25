@@ -1,6 +1,7 @@
 import { createContext, useContext } from 'react'
 import type { StepId } from '@/schemas/project'
 import type { GeneratedOutput } from '@/lib/prompt/types'
+import type { SampleValues } from './randomize'
 
 export interface DraftNotice {
   readonly kind: 'restored' | 'migrated' | 'incompatible'
@@ -35,6 +36,16 @@ export interface GeneratorApi {
   readonly saveState: SaveState
   /** Cap masa ISO simpanan terakhir yang berjaya, jika ada. */
   readonly lastSavedAt: string | null
+  /** Isi medan wajib kosong dengan teks contoh dan rawakkan pilihan visual. */
+  readonly surpriseMe: () => void
+  /**
+   * Teks contoh yang pernah diisi oleh "Kejutkan saya", mengikut medan.
+   *
+   * Nilai mentah yang dikongsi, bukan senarai terkira: SampleNotice
+   * membandingkannya dengan borang melalui useWatch sendiri supaya hanya
+   * amaran itu di-render semula semasa pengguna menaip (NFR-001).
+   */
+  readonly sampleValues: SampleValues
 }
 
 export const GeneratorContext = createContext<GeneratorApi | null>(null)

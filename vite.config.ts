@@ -44,8 +44,10 @@ export default defineConfig({
           name: 'unit',
           pool: 'threads',
           // Enjin prompt tulen — tiada DOM diperlukan, jadi jauh lebih pantas.
+          // Fail .ts dalam features/ turut termasuk (contohnya penjana rawak
+          // yang menerima rng sebagai parameter); ujian komponen kekal .tsx.
           environment: 'node',
-          include: ['src/{lib,data,schemas}/**/*.test.ts'],
+          include: ['src/{lib,data,schemas,features}/**/*.test.ts'],
         },
       },
       {

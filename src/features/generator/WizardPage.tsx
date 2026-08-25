@@ -10,6 +10,7 @@ import { useGenerator } from './context'
 import { DraftBanner } from './DraftBanner'
 import { ErrorSummary, type ErrorItem } from './ErrorSummary'
 import { ProjectSummary } from './ProjectSummary'
+import { SampleNotice } from './SampleNotice'
 import { SaveIndicator } from './SaveIndicator'
 import { WizardStepper } from './WizardStepper'
 import { StepCanvas } from './steps/StepCanvas'
@@ -43,6 +44,7 @@ export function WizardPage() {
     draftNotice,
     dismissDraftNotice,
     discardDraft,
+    surpriseMe,
   } = useGenerator()
 
   const [stepErrors, setStepErrors] = useState<ErrorItem[]>([])
@@ -195,6 +197,8 @@ export function WizardPage() {
               <SaveIndicator />
             </header>
 
+            <SampleNotice />
+
             <ErrorSummary errors={stepErrors} onSelect={focusField} />
 
             <form
@@ -215,13 +219,23 @@ export function WizardPage() {
                 CTA melekat di bawah.
               */}
               <div className="pp-no-print mt-8 flex flex-wrap items-center justify-between gap-3">
-                <Button
-                  type="button"
-                  variant="ghost"
-                  onClick={() => setConfirmReset(true)}
-                >
-                  Set semula projek
-                </Button>
+                <div className="flex flex-wrap gap-2">
+                  {/*
+                    Jalan pintas untuk mencuba: isi medan wajib yang kosong
+                    dengan teks contoh dan rawakkan pilihan visual. Teks yang
+                    sudah ditaip tidak pernah ditimpa.
+                  */}
+                  <Button type="button" variant="ghost" onClick={surpriseMe}>
+                    Kejutkan saya
+                  </Button>
+                  <Button
+                    type="button"
+                    variant="ghost"
+                    onClick={() => setConfirmReset(true)}
+                  >
+                    Set semula projek
+                  </Button>
+                </div>
                 <div className="hidden flex-wrap gap-2 lg:flex">
                   <Button
                     type="button"

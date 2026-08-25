@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { screen, within } from '@testing-library/react'
+import { screen, waitFor, within } from '@testing-library/react'
 import { renderApp } from '@/tests/renderApp'
 
 /** Isi medan teks mengikut label yang kelihatan. */
@@ -93,6 +93,46 @@ describe('wizard — dimensi tersuai tidak sah (UAT-03, FR-005)', () => {
     await nextStep(user)
 
     expect(await screen.findByRole('heading', { level: 1, name: 'Gaya' })).toBeInTheDocument()
+  })
+})
+
+describe('wizard — kejutkan saya (§5.3)', () => {
+  it('mengisi medan wajib yang kosong dan mengamarkan teks contoh', async () => {
+    const { user } = renderApp()
+    expect(screen.getByLabelText(/^Tajuk utama/)).toHaveValue('')
+
+    await user.click(screen.getByRole('button', { name: 'Kejutkan saya' }))
+
+    expect(screen.getByLabelText(/^Tajuk utama/)).not.toHaveValue('')
+    expect(screen.getByLabelText(/^Nama program/)).not.toHaveValue('')
+    expect(screen.getByLabelText(/^Tarikh/)).not.toHaveValue('')
+    // Teks contoh mesti diisytiharkan, bukan diselitkan senyap.
+    expect(await screen.findByText(/masih menggunakan teks contoh/)).toBeInTheDocument()
+  })
+
+  it('tidak menimpa teks yang telah ditaip pengguna', async () => {
+    const { user } = renderApp()
+    await fill(user, /^Tajuk utama/, 'TAJUK SAYA SENDIRI')
+
+    await user.click(screen.getByRole('button', { name: 'Kejutkan saya' }))
+
+    expect(screen.getByLabelText(/^Tajuk utama/)).toHaveValue('TAJUK SAYA SENDIRI')
+    expect(screen.getByLabelText(/^Tarikh/)).not.toHaveValue('')
+  })
+
+  it('menarik balik amaran sebaik medan contoh disunting semula', async () => {
+    const { user } = renderApp()
+    await user.click(screen.getByRole('button', { name: 'Kejutkan saya' }))
+    await screen.findByText(/masih menggunakan teks contoh/)
+
+    // Ganti setiap medan contoh dengan teks sebenar.
+    await fill(user, /^Tajuk utama/, 'MAJLIS SEBENAR')
+    await fill(user, /^Nama program/, 'Program Sebenar')
+    await fill(user, /^Tarikh/, '1 Januari 2027')
+
+    await waitFor(() =>
+      expect(screen.queryByText(/masih menggunakan teks contoh/)).not.toBeInTheDocument(),
+    )
   })
 })
 
