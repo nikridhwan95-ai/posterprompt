@@ -8,7 +8,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 npm run dev          # Vite dev server, port 5173
 npm run build        # tsc -b + binaan production ke dist/
 npm run preview      # layan binaan production
-npm run test         # suite penuh (214 ujian, 13 fail)
+npm run test         # suite penuh (216 ujian, 13 fail)
 npm run test:watch   # mod tontonan
 npm run lint         # oxlint src (bersih — kekalkan begitu)
 npm run typecheck    # tsc --noEmit -p tsconfig.app.json

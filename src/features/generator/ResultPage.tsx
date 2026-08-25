@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from 'react'
 import { useFormContext } from 'react-hook-form'
 import { useNavigate } from 'react-router-dom'
 import { Button } from '@/components/Button'
+import { ConfirmDialog } from '@/components/ConfirmDialog'
 import { getPlatform } from '@/data/platforms'
 import { getCategory } from '@/data/categories'
 import { stepForField, STEP_LABELS, type PosterProject, type StepId } from '@/schemas/project'
@@ -34,9 +35,10 @@ const SEVERITY_LABELS: Record<QualityWarning['severity'], string> = {
 /** Panel hasil: empat tab output, amaran dan pautan sunting semula (§5.1). */
 export function ResultPage() {
   const navigate = useNavigate()
-  const { output, goToStep } = useGenerator()
+  const { output, goToStep, resetProject } = useGenerator()
   const { getValues } = useFormContext<PosterProject>()
   const [tab, setTab] = useState<TabId>('prompt')
+  const [confirmReset, setConfirmReset] = useState(false)
   const tabRefs = useRef<Record<string, HTMLButtonElement | null>>({})
   const headingRef = useRef<HTMLHeadingElement>(null)
 
@@ -102,6 +104,14 @@ export function ResultPage() {
             </p>
           </div>
           <div className="pp-no-print flex flex-wrap gap-2">
+            {/*
+              Set semula turut ditawarkan di sini supaya pengguna yang mahu
+              memulakan poster baharu tidak perlu kembali ke wizard dan
+              menatal ke bawah borang dahulu (FR-021, UC-05).
+            */}
+            <Button type="button" variant="ghost" onClick={() => setConfirmReset(true)}>
+              Set semula projek
+            </Button>
             <Button type="button" variant="secondary" onClick={() => navigate('/generator')}>
               Sunting semula
             </Button>
@@ -281,6 +291,18 @@ export function ResultPage() {
           </aside>
         </div>
       </div>
+
+      <ConfirmDialog
+        open={confirmReset}
+        title="Set semula keseluruhan projek?"
+        description="Semua medan akan dikembalikan kepada keadaan awal dan draf tersimpan dalam pelayar ini akan dipadam. Tindakan ini tidak boleh dibatalkan."
+        confirmLabel="Ya, set semula"
+        onConfirm={() => {
+          setConfirmReset(false)
+          resetProject()
+        }}
+        onCancel={() => setConfirmReset(false)}
+      />
     </div>
   )
 }

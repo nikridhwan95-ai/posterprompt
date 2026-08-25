@@ -124,6 +124,35 @@ describe('peringatan dan penunjuk pada langkah akhir', () => {
   })
 })
 
+describe('set semula daripada halaman hasil (FR-021)', () => {
+  it('menawarkan set semula pada halaman hasil dan memadam segalanya selepas pengesahan', async () => {
+    seedDraft(appendixBProject)
+    const { user } = renderApp()
+    await generate(user)
+
+    await user.click(screen.getByRole('button', { name: 'Set semula projek' }))
+    await user.click(await screen.findByRole('button', { name: 'Ya, set semula' }))
+
+    // Kembali ke langkah pertama wizard dengan borang kosong dan draf dipadam.
+    expect(await screen.findByRole('heading', { level: 1, name: 'Kandungan' })).toBeInTheDocument()
+    expect(screen.getByLabelText(/^Tajuk utama/)).toHaveValue('')
+    expect(localStorage.getItem(STORAGE_KEYS.draft)).toBeNull()
+  })
+
+  it('tidak mengubah apa-apa apabila pengguna membatalkan dialog', async () => {
+    seedDraft(appendixBProject)
+    const { user } = renderApp()
+    await generate(user)
+
+    await user.click(screen.getByRole('button', { name: 'Set semula projek' }))
+    await user.click(await screen.findByRole('button', { name: 'Batal' }))
+
+    // Kekal pada halaman hasil dan draf tidak disentuh.
+    expect(screen.getByRole('heading', { level: 1, name: /^Prompt untuk/ })).toBeInTheDocument()
+    expect(localStorage.getItem(STORAGE_KEYS.draft)).not.toBeNull()
+  })
+})
+
 describe('panel hasil — empat blok output (FR-014 hingga FR-016)', () => {
   it('memaparkan prompt utama dengan sepuluh bahagian', async () => {
     seedDraft(appendixBProject)
