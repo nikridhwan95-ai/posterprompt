@@ -61,6 +61,14 @@ describe('negative prompt (§7.7)', () => {
     expect(ids).toContain('busy_background')
     expect(ids).not.toContain('excessive_ornament')
 
+    // Sama juga bagi gaya berhias baharu seperti grafiti.
+    const graffiti = makeProject({
+      ...denseProject,
+      style: { ...denseProject.style, stylePreset: 'graffiti' },
+    })
+    const graffitiIds = negativeRules(graffiti, scoreContentDensity(graffiti), 'en').map((r) => r.id)
+    expect(graffitiIds).not.toContain('excessive_ornament')
+
     // Gaya bukan berhias mengekalkan larangan tersebut.
     const plain = makeProject({
       ...denseProject,

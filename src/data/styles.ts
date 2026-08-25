@@ -9,16 +9,48 @@ import type { Bilingual, PresetOption } from './types'
 export type StyleId =
   | 'corporate'
   | 'minimalist'
+  | 'swiss'
+  | 'modern'
+  | 'editorial'
+  | 'vector_art'
   | 'premium'
   | 'elegant'
-  | 'modern'
+  | 'victorian'
+  | 'bohemian'
+  | 'cinematic'
   | 'futuristic'
+  | 'cyberpunk'
+  | 'glassmorphism'
+  | 'aurora'
+  | 'y2k'
+  | 'pixel_art'
+  | 'clay'
+  | 'maximalist'
+  | 'pop_art'
+  | 'collage_art'
+  | 'graffiti'
+  | 'surrealism'
+  | 'handwritten'
+  | 'youth'
   | 'islamic_geometric'
   | 'traditional_malay'
   | 'cultural'
-  | 'cinematic'
-  | 'editorial'
-  | 'youth'
+
+/**
+ * Kumpulan gaya untuk paparan wizard sahaja (§5.5). Katalog gaya terlalu
+ * panjang untuk satu grid rata, jadi setiap gaya membawa kumpulannya dan
+ * langkah Gaya merender satu fieldset bersarang bagi setiap kumpulan.
+ * Kumpulan tidak pernah masuk ke dalam teks prompt.
+ */
+export type StyleGroupId = 'asas' | 'klasik' | 'digital' | 'ekspresif' | 'warisan'
+
+export const STYLE_GROUPS: readonly { readonly id: StyleGroupId; readonly label: Bilingual }[] = [
+  { id: 'asas', label: { ms: 'Asas dan struktur', en: 'Foundational and structured' } },
+  { id: 'klasik', label: { ms: 'Mewah dan klasik', en: 'Luxury and classic' } },
+  { id: 'digital', label: { ms: 'Digital dan futuristik', en: 'Digital and futuristic' } },
+  { id: 'ekspresif', label: { ms: 'Ekspresif dan seni', en: 'Expressive and artistic' } },
+  { id: 'warisan', label: { ms: 'Warisan tempatan', en: 'Local heritage' } },
+]
 
 export interface StylePreset extends PresetOption<StyleId> {
   /**
@@ -29,8 +61,14 @@ export interface StylePreset extends PresetOption<StyleId> {
   readonly ornamental: boolean
   /** Gaya yang mengutamakan ruang kosong; asas amaran konflik §10.3. */
   readonly minimal: boolean
+  /** Kumpulan paparan dalam wizard; tiada kesan pada output. */
+  readonly group: StyleGroupId
 }
 
+/**
+ * Katalog gaya utama. Disusun mengikut kumpulan paparan supaya turutan dalam
+ * wizard sepadan dengan turutan katalog.
+ */
 export const STYLES: readonly StylePreset[] = [
   {
     id: 'corporate',
@@ -42,6 +80,7 @@ export const STYLES: readonly StylePreset[] = [
     },
     ornamental: false,
     minimal: false,
+    group: 'asas',
   },
   {
     id: 'minimalist',
@@ -53,28 +92,19 @@ export const STYLES: readonly StylePreset[] = [
     },
     ornamental: false,
     minimal: true,
+    group: 'asas',
   },
   {
-    id: 'premium',
-    label: { ms: 'Premium', en: 'Premium' },
-    hint: { ms: 'Mewah, kontras tinggi, aksen logam.', en: 'Luxurious, high contrast, metallic accents.' },
+    id: 'swiss',
+    label: { ms: 'Swiss', en: 'Swiss' },
+    hint: { ms: 'Grid ketat ala Gaya Tipografi Antarabangsa.', en: 'Strict grid, International Typographic Style.' },
     prompt: {
-      ms: 'gaya premium mewah dengan aksen halus bernada logam dan kontras tinggi',
-      en: 'premium luxury style with subtle metallic accents and high contrast',
+      ms: 'gaya Swiss (International Typographic Style) dengan grid ketat, tipografi sans-serif dan susunan asimetri berdisiplin',
+      en: 'Swiss International Typographic Style with a strict grid, sans-serif type and disciplined asymmetric layout',
     },
-    ornamental: true,
-    minimal: false,
-  },
-  {
-    id: 'elegant',
-    label: { ms: 'Elegan', en: 'Elegant' },
-    hint: { ms: 'Halus, seimbang, tenang.', en: 'Refined, balanced, calm.' },
-    prompt: {
-      ms: 'gaya elegan yang halus dan seimbang',
-      en: 'elegant refined style with balanced proportions',
-    },
-    ornamental: true,
-    minimal: false,
+    ornamental: false,
+    minimal: true,
+    group: 'asas',
   },
   {
     id: 'modern',
@@ -86,61 +116,7 @@ export const STYLES: readonly StylePreset[] = [
     },
     ornamental: false,
     minimal: false,
-  },
-  {
-    id: 'futuristic',
-    label: { ms: 'Futuristik', en: 'Futuristic' },
-    hint: { ms: 'Teknologi, cahaya dan gradien.', en: 'Tech, light and gradients.' },
-    prompt: {
-      ms: 'gaya futuristik bertenaga teknologi dengan gradien dan kesan cahaya terkawal',
-      en: 'futuristic technology-driven style with gradients and controlled light effects',
-    },
-    ornamental: true,
-    minimal: false,
-  },
-  {
-    id: 'islamic_geometric',
-    label: { ms: 'Islamik geometri', en: 'Islamic geometric' },
-    hint: { ms: 'Corak geometri Islam yang beradab.', en: 'Modest Islamic geometric patterns.' },
-    prompt: {
-      ms: 'gaya Islamik dengan corak geometri yang beradab dan tidak menggambarkan imej terlarang',
-      en: 'Islamic style with modest geometric patterning and no prohibited imagery',
-    },
-    ornamental: true,
-    minimal: false,
-  },
-  {
-    id: 'traditional_malay',
-    label: { ms: 'Tradisional Melayu', en: 'Traditional Malay' },
-    hint: { ms: 'Motif songket dan ukiran Melayu.', en: 'Songket and Malay carving motifs.' },
-    prompt: {
-      ms: 'gaya tradisional Melayu dengan motif songket dan ukiran halus',
-      en: 'traditional Malay style with songket and fine carving motifs',
-    },
-    ornamental: true,
-    minimal: false,
-  },
-  {
-    id: 'cultural',
-    label: { ms: 'Kebudayaan', en: 'Cultural' },
-    hint: { ms: 'Ekspresif, berwarna, meraikan.', en: 'Expressive, colourful, celebratory.' },
-    prompt: {
-      ms: 'gaya kebudayaan yang ekspresif dan meraikan',
-      en: 'expressive celebratory cultural style',
-    },
-    ornamental: true,
-    minimal: false,
-  },
-  {
-    id: 'cinematic',
-    label: { ms: 'Sinematik', en: 'Cinematic' },
-    hint: { ms: 'Pencahayaan dramatik seperti filem.', en: 'Dramatic film-like lighting.' },
-    prompt: {
-      ms: 'gaya sinematik dengan pencahayaan dramatik dan kedalaman ruang',
-      en: 'cinematic style with dramatic lighting and spatial depth',
-    },
-    ornamental: false,
-    minimal: false,
+    group: 'asas',
   },
   {
     id: 'editorial',
@@ -152,6 +128,235 @@ export const STYLES: readonly StylePreset[] = [
     },
     ornamental: false,
     minimal: false,
+    group: 'asas',
+  },
+  {
+    id: 'vector_art',
+    label: { ms: 'Seni vektor', en: 'Vector art' },
+    hint: { ms: 'Bentuk rata, garis tegas, warna pejal.', en: 'Flat shapes, crisp lines, solid colour.' },
+    prompt: {
+      ms: 'gaya seni vektor dengan bentuk rata bersih, garis tegas dan warna pejal tanpa tekstur fotografi',
+      en: 'flat vector art style with clean shapes, crisp outlines and solid colour rather than photographic texture',
+    },
+    ornamental: false,
+    minimal: false,
+    group: 'asas',
+  },
+  {
+    id: 'premium',
+    label: { ms: 'Premium', en: 'Premium' },
+    hint: { ms: 'Mewah, kontras tinggi, aksen logam.', en: 'Luxurious, high contrast, metallic accents.' },
+    prompt: {
+      ms: 'gaya premium mewah dengan aksen halus bernada logam dan kontras tinggi',
+      en: 'premium luxury style with subtle metallic accents and high contrast',
+    },
+    ornamental: true,
+    minimal: false,
+    group: 'klasik',
+  },
+  {
+    id: 'elegant',
+    label: { ms: 'Elegan', en: 'Elegant' },
+    hint: { ms: 'Halus, seimbang, tenang.', en: 'Refined, balanced, calm.' },
+    prompt: {
+      ms: 'gaya elegan yang halus dan seimbang',
+      en: 'elegant refined style with balanced proportions',
+    },
+    ornamental: true,
+    minimal: false,
+    group: 'klasik',
+  },
+  {
+    id: 'victorian',
+    label: { ms: 'Victorian', en: 'Victorian' },
+    hint: { ms: 'Bingkai berukir dan ornamen klasik.', en: 'Engraved frames and classical ornament.' },
+    prompt: {
+      ms: 'gaya Victorian dengan bingkai berukir, ornamen klasik dan tipografi serif berhias',
+      en: 'Victorian style with engraved frames, classical ornament and decorative serif typography',
+    },
+    ornamental: true,
+    minimal: false,
+    group: 'klasik',
+  },
+  {
+    id: 'bohemian',
+    label: { ms: 'Bohemian', en: 'Bohemian' },
+    hint: { ms: 'Nada bumi dan corak organik.', en: 'Earthy tones and organic pattern.' },
+    prompt: {
+      ms: 'gaya bohemian dengan nada warna bumi, corak organik dan tekstur kraf tangan',
+      en: 'bohemian style with earthy tones, organic pattern and handcrafted texture',
+    },
+    ornamental: true,
+    minimal: false,
+    group: 'klasik',
+  },
+  {
+    id: 'cinematic',
+    label: { ms: 'Sinematik', en: 'Cinematic' },
+    hint: { ms: 'Pencahayaan dramatik seperti filem.', en: 'Dramatic film-like lighting.' },
+    prompt: {
+      ms: 'gaya sinematik dengan pencahayaan dramatik dan kedalaman ruang',
+      en: 'cinematic style with dramatic lighting and spatial depth',
+    },
+    ornamental: false,
+    minimal: false,
+    group: 'klasik',
+  },
+  {
+    id: 'futuristic',
+    label: { ms: 'Futuristik', en: 'Futuristic' },
+    hint: { ms: 'Teknologi, cahaya dan gradien.', en: 'Tech, light and gradients.' },
+    prompt: {
+      ms: 'gaya futuristik bertenaga teknologi dengan gradien dan kesan cahaya terkawal',
+      en: 'futuristic technology-driven style with gradients and controlled light effects',
+    },
+    ornamental: true,
+    minimal: false,
+    group: 'digital',
+  },
+  {
+    id: 'cyberpunk',
+    label: { ms: 'Cyberpunk', en: 'Cyberpunk' },
+    hint: { ms: 'Neon bandar malam, kontras tinggi.', en: 'Neon night city, high contrast.' },
+    prompt: {
+      ms: 'gaya cyberpunk dengan neon terang, suasana bandar waktu malam dan kontras gelap yang tinggi',
+      en: 'cyberpunk style with bright neon, night-city atmosphere and deep dark contrast',
+    },
+    ornamental: true,
+    minimal: false,
+    group: 'digital',
+  },
+  {
+    id: 'glassmorphism',
+    label: { ms: 'Glassmorphism', en: 'Glassmorphism' },
+    hint: { ms: 'Panel kaca lut sinar dan kabur.', en: 'Translucent frosted glass panels.' },
+    prompt: {
+      ms: 'gaya glassmorphism dengan panel kaca lut sinar, latar kabur dan sempadan cahaya nipis',
+      en: 'glassmorphism style with translucent glass panels, blurred backdrop and thin light borders',
+    },
+    ornamental: false,
+    minimal: false,
+    group: 'digital',
+  },
+  {
+    id: 'aurora',
+    label: { ms: 'Aurora', en: 'Aurora' },
+    hint: { ms: 'Gradien cahaya berbaur lembut.', en: 'Soft blended light gradients.' },
+    prompt: {
+      ms: 'gaya aurora dengan gradien cahaya berbaur lembut dan pancaran warna yang mengalir',
+      en: 'aurora style with soft blended light gradients and flowing colour glow',
+    },
+    ornamental: true,
+    minimal: false,
+    group: 'digital',
+  },
+  {
+    id: 'y2k',
+    label: { ms: 'Y2K', en: 'Y2K' },
+    hint: { ms: 'Krom, gelembung, nostalgia 2000-an.', en: 'Chrome, bubbles, early-2000s nostalgia.' },
+    prompt: {
+      ms: 'gaya Y2K dengan kesan krom, bentuk gelembung dan nostalgia digital awal 2000-an',
+      en: 'Y2K style with chrome effects, bubble shapes and early-2000s digital nostalgia',
+    },
+    ornamental: true,
+    minimal: false,
+    group: 'digital',
+  },
+  {
+    id: 'pixel_art',
+    label: { ms: 'Seni piksel', en: 'Pixel art' },
+    hint: { ms: 'Grid piksel retro 8-bit.', en: 'Retro 8-bit pixel grid.' },
+    prompt: {
+      ms: 'gaya seni piksel dengan grid piksel retro dan tepi bertangga yang disengajakan',
+      en: 'pixel art style with a retro pixel grid and deliberate stair-stepped edges',
+    },
+    ornamental: false,
+    minimal: false,
+    group: 'digital',
+  },
+  {
+    id: 'clay',
+    label: { ms: 'Clay 3D', en: 'Clay 3D' },
+    hint: { ms: 'Bentuk 3D lembut, permukaan matte.', en: 'Soft 3D forms, matte surfaces.' },
+    prompt: {
+      ms: 'gaya clay 3D dengan bentuk lembut bersudut bulat, permukaan matte dan pencahayaan studio yang lembut',
+      en: 'clay 3D style with soft rounded forms, matte surfaces and gentle studio lighting',
+    },
+    ornamental: false,
+    minimal: false,
+    group: 'digital',
+  },
+  {
+    id: 'maximalist',
+    label: { ms: 'Maksimalis', en: 'Maximalist' },
+    hint: { ms: 'Padat, berlapis, penuh warna.', en: 'Dense, layered, full of colour.' },
+    prompt: {
+      ms: 'gaya maksimalis yang padat dan berlapis dengan corak bertindih serta warna berani',
+      en: 'maximalist style, dense and layered with overlapping pattern and bold colour',
+    },
+    ornamental: true,
+    minimal: false,
+    group: 'ekspresif',
+  },
+  {
+    id: 'pop_art',
+    label: { ms: 'Pop art', en: 'Pop art' },
+    hint: { ms: 'Warna blok tepu dan titik halftone.', en: 'Saturated block colour and halftone dots.' },
+    prompt: {
+      ms: 'gaya pop art dengan warna blok tepu, titik halftone dan garis luar tebal',
+      en: 'pop art style with saturated block colour, halftone dots and heavy outlines',
+    },
+    ornamental: true,
+    minimal: false,
+    group: 'ekspresif',
+  },
+  {
+    id: 'collage_art',
+    label: { ms: 'Kolaj', en: 'Collage art' },
+    hint: { ms: 'Cebisan kertas dan potongan bercampur.', en: 'Torn paper and mixed cut-outs.' },
+    prompt: {
+      ms: 'gaya kolaj dengan cebisan kertas terkoyak, potongan bercampur dan lapisan tekstur',
+      en: 'collage style with torn paper fragments, mixed cut-outs and layered texture',
+    },
+    ornamental: true,
+    minimal: false,
+    group: 'ekspresif',
+  },
+  {
+    id: 'graffiti',
+    label: { ms: 'Grafiti', en: 'Graffiti' },
+    hint: { ms: 'Cat semburan jalanan dan huruf berani.', en: 'Street spray paint and bold lettering.' },
+    prompt: {
+      ms: 'gaya grafiti jalanan dengan kesan cat semburan, tekstur dinding dan huruf berani',
+      en: 'street graffiti style with spray-paint texture, wall surface and bold lettering',
+    },
+    ornamental: true,
+    minimal: false,
+    group: 'ekspresif',
+  },
+  {
+    id: 'surrealism',
+    label: { ms: 'Surrealisme', en: 'Surrealism' },
+    hint: { ms: 'Gabungan objek yang tidak dijangka.', en: 'Unexpected, dreamlike combinations.' },
+    prompt: {
+      ms: 'gaya surrealisme dengan gabungan objek yang tidak dijangka dan skala yang bermain dengan logik',
+      en: 'surrealist style with unexpected object combinations and dreamlike shifts of scale',
+    },
+    ornamental: true,
+    minimal: false,
+    group: 'ekspresif',
+  },
+  {
+    id: 'handwritten',
+    label: { ms: 'Tulisan tangan', en: 'Handwritten' },
+    hint: { ms: 'Huruf dilakar dan elemen doodle.', en: 'Hand-lettered type and doodles.' },
+    prompt: {
+      ms: 'gaya tulisan tangan dengan huruf yang dilakar dan elemen doodle organik',
+      en: 'handwritten style with hand-lettered type and organic doodle elements',
+    },
+    ornamental: false,
+    minimal: false,
+    group: 'ekspresif',
   },
   {
     id: 'youth',
@@ -163,6 +368,43 @@ export const STYLES: readonly StylePreset[] = [
     },
     ornamental: true,
     minimal: false,
+    group: 'ekspresif',
+  },
+  {
+    id: 'islamic_geometric',
+    label: { ms: 'Islamik geometri', en: 'Islamic geometric' },
+    hint: { ms: 'Corak geometri Islam yang beradab.', en: 'Modest Islamic geometric patterns.' },
+    prompt: {
+      ms: 'gaya Islamik dengan corak geometri yang beradab dan tidak menggambarkan imej terlarang',
+      en: 'Islamic style with modest geometric patterning and no prohibited imagery',
+    },
+    ornamental: true,
+    minimal: false,
+    group: 'warisan',
+  },
+  {
+    id: 'traditional_malay',
+    label: { ms: 'Tradisional Melayu', en: 'Traditional Malay' },
+    hint: { ms: 'Motif songket dan ukiran Melayu.', en: 'Songket and Malay carving motifs.' },
+    prompt: {
+      ms: 'gaya tradisional Melayu dengan motif songket dan ukiran halus',
+      en: 'traditional Malay style with songket and fine carving motifs',
+    },
+    ornamental: true,
+    minimal: false,
+    group: 'warisan',
+  },
+  {
+    id: 'cultural',
+    label: { ms: 'Kebudayaan', en: 'Cultural' },
+    hint: { ms: 'Ekspresif, berwarna, meraikan.', en: 'Expressive, colourful, celebratory.' },
+    prompt: {
+      ms: 'gaya kebudayaan yang ekspresif dan meraikan',
+      en: 'expressive celebratory cultural style',
+    },
+    ornamental: true,
+    minimal: false,
+    group: 'warisan',
   },
 ] as const
 
@@ -741,6 +983,11 @@ export const BACKGROUNDS: readonly BackgroundPreset[] = [
 ] as const
 
 export const STYLE_IDS = STYLES.map((s) => s.id) as [StyleId, ...StyleId[]]
+
+/** Label kumpulan gaya; jatuh balik kepada id jika kumpulan tidak dikenali. */
+export function styleGroupLabel(id: StyleGroupId): Bilingual {
+  return STYLE_GROUPS.find((group) => group.id === id)?.label ?? { ms: id, en: id }
+}
 export const MOOD_IDS = MOODS.map((m) => m.id) as [MoodId, ...MoodId[]]
 export const COMPOSITION_IDS = COMPOSITIONS.map((c) => c.id) as [CompositionId, ...CompositionId[]]
 export const TYPEFACE_IDS = TYPEFACES.map((t) => t.id) as [TypefaceId, ...TypefaceId[]]

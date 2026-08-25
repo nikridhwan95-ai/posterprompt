@@ -1,5 +1,12 @@
 import { Controller, useFormContext } from 'react-hook-form'
-import { BACKGROUNDS, MOODS, STYLES, TEXT_CONTRASTS, TYPEFACES } from '@/data/styles'
+import {
+  BACKGROUNDS,
+  MOODS,
+  STYLES,
+  TEXT_CONTRASTS,
+  TYPEFACES,
+  styleGroupLabel,
+} from '@/data/styles'
 import { PALETTES } from '@/data/palettes'
 import { ColorPicker } from '@/components/ColorPicker'
 import { OptionGroup } from '@/components/OptionGroup'
@@ -40,7 +47,7 @@ export function StepStyle() {
             value={field.value}
             columns={3}
             onChange={field.onChange}
-            choices={toChoices(STYLES)}
+            choices={toChoices(STYLES, (style) => styleGroupLabel(style.group).ms)}
             error={errors.style?.stylePreset?.message}
           />
         )}

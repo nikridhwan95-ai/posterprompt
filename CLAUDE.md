@@ -8,7 +8,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 npm run dev          # Vite dev server, port 5173
 npm run build        # tsc -b + binaan production ke dist/
 npm run preview      # layan binaan production
-npm run test         # suite penuh (200 ujian, 12 fail)
+npm run test         # suite penuh (214 ujian, 13 fail)
 npm run test:watch   # mod tontonan
 npm run lint         # oxlint src (bersih — kekalkan begitu)
 npm run typecheck    # tsc --noEmit -p tsconfig.app.json
@@ -81,6 +81,12 @@ Kategori, kanvas, gaya, palet dan platform ialah tatasusunan preset baca sahaja.
 tidak boleh mengimport modul lain (NFR-007) supaya katalog kekal bebas daripada skema dan UI.
 Kategori menentukan medan mana yang wajib/dipaparkan, labelnya, dan ayat DESIGN TASK — menambah
 kategori bermakna menyunting `categories.ts` sahaja, bukan komponen borang.
+
+Setiap `StylePreset` membawa tiga medan selain teks: `ornamental` menggugurkan larangan "hiasan
+berlebihan" daripada negative prompt (§7.7 peraturan kelima), `minimal` mencetuskan amaran gaya
+minimalis yang padat (§10.3), dan `group` hanya menentukan sub-tajuk dalam langkah Gaya — ia tidak
+pernah masuk ke dalam teks prompt. Katalog disusun mengikut turutan `STYLE_GROUPS`; ujian dalam
+`data/styles.test.ts` mengunci turutan itu, kelengkapan dwibahasa dan kekonsistenan bendera.
 
 ### Borang dan laluan
 

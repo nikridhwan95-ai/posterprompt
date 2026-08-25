@@ -39,7 +39,7 @@ npm run dev
 
 1. **Kandungan** — kategori, bahasa dan teks rasmi. Medan berubah mengikut kategori.
 2. **Kanvas** — preset saiz atau dimensi tersuai, orientasi dan destinasi.
-3. **Gaya** — gaya utama, mood, palet, warna tersuai dan tipografi.
+3. **Gaya** — gaya utama (28 gaya dalam lima kumpulan), mood, palet, warna tersuai dan tipografi.
 4. **Susun atur** — komposisi, subjek, dan zon logo, penaja, QR serta footer.
 5. **Platform** — adapter sasaran, bahasa arahan, semakan dan penjanaan.
 
@@ -134,7 +134,7 @@ turun teksnya sebelum memadam.
 
 ## Ujian
 
-200 ujian merentas 12 fail.
+214 ujian merentas 13 fail.
 
 - **Unit** (persekitaran node) — normalizer, skor ketumpatan termasuk sempadan band, composer dan
   determinismenya, keenam-enam adapter, peraturan negative prompt, audit QA-01…07, pengesanan
