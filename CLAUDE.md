@@ -8,7 +8,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 npm run dev          # Vite dev server, port 5173
 npm run build        # tsc -b + binaan production ke dist/
 npm run preview      # layan binaan production
-npm run test         # suite penuh (200 ujian, 12 fail)
+npm run test         # suite penuh (219 ujian, 13 fail)
 npm run test:watch   # mod tontonan
 npm run lint         # oxlint src (bersih — kekalkan begitu)
 npm run typecheck    # tsc --noEmit -p tsconfig.app.json
@@ -82,6 +82,12 @@ tidak boleh mengimport modul lain (NFR-007) supaya katalog kekal bebas daripada 
 Kategori menentukan medan mana yang wajib/dipaparkan, labelnya, dan ayat DESIGN TASK — menambah
 kategori bermakna menyunting `categories.ts` sahaja, bukan komponen borang.
 
+Setiap `StylePreset` membawa tiga medan selain teks: `ornamental` menggugurkan larangan "hiasan
+berlebihan" daripada negative prompt (§7.7 peraturan kelima), `minimal` mencetuskan amaran gaya
+minimalis yang padat (§10.3), dan `group` hanya menentukan sub-tajuk dalam langkah Gaya — ia tidak
+pernah masuk ke dalam teks prompt. Katalog disusun mengikut turutan `STYLE_GROUPS`; ujian dalam
+`data/styles.test.ts` mengunci turutan itu, kelengkapan dwibahasa dan kekonsistenan bendera.
+
 ### Borang dan laluan
 
 `GeneratorLayout` ialah layout route yang memayungi `/generator` dan `/hasil`, memegang satu
@@ -93,6 +99,12 @@ menghilangkan input (FR-019). Wizard lima langkah (`kandungan`, `kanvas`, `gaya`
 Komponen tidak boleh mengeksport apa-apa selain komponen (peraturan
 `react/only-export-components`): hook dan pembantu diletakkan dalam modul berasingan —
 `components/toast-context.ts` untuk `useToast`, `components/choices.ts` untuk `toChoices`.
+
+Kad pilihan visual: swatch SVG/CSS bagi kanvas, komposisi, penjajaran, tipografi dan gaya
+berada dalam `features/generator/swatches.tsx` — semuanya `aria-hidden`, dilukis sebaris
+kerana CSP menghalang aset luar. Warna UI: magenta untuk trek pilihan/aksi, biru untuk
+pautan teks, navigasi dan maklumat sahaja. Kaunter aksara medan hanya dipaparkan semasa
+fokus atau apabila `counterWarning` aktif (≥80% had).
 
 Shell (`app/Layout.tsx`) memiliki satu-satunya landmark `<main>` dan menjadi sasaran pautan
 langkau; halaman anak tidak boleh menambah `<main>` sendiri.

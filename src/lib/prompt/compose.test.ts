@@ -14,6 +14,7 @@ import {
 } from '@/tests/fixtures'
 import { CATEGORIES } from '@/data/categories'
 import { PLATFORMS } from '@/data/platforms'
+import { STYLES } from '@/data/styles'
 import { TEMPLATE_VERSION, SCHEMA_VERSION } from '@/data/version'
 
 describe('generatePrompt — determinisme (NFR-008)', () => {
@@ -69,6 +70,33 @@ describe('generatePrompt — struktur prompt (§7.1)', () => {
     expect(output.schemaVersion).toBe(SCHEMA_VERSION)
     expect(output.templateVersion).toBe(TEMPLATE_VERSION)
     expect(output.adapterVersion).toBe('1.0.0')
+  })
+
+  it('menyisipkan deskriptor setiap gaya katalog ke dalam VISUAL DIRECTION', () => {
+    // Gaya yang boleh dipilih dalam wizard mesti benar-benar mengubah prompt;
+    // id yang tidak dikenali oleh fragmen akan gugur tanpa jejak.
+    for (const style of STYLES) {
+      const project = makeProject({
+        ...typicalProject,
+        style: { ...typicalProject.style, stylePreset: style.id },
+        platform: { ...typicalProject.platform, promptLanguage: 'ms' },
+      })
+      const output = generatePrompt(project)
+      const visual = output.sections.find((section) => section.section === 'VISUAL DIRECTION')
+      expect(visual?.lines.join(' '), style.id).toContain(style.prompt.ms)
+    }
+  })
+
+  it('menggunakan deskriptor Inggeris apabila bahasa prompt ialah BI', () => {
+    const project = makeProject({
+      ...typicalProject,
+      style: { ...typicalProject.style, stylePreset: 'cyberpunk' },
+      platform: { ...typicalProject.platform, promptLanguage: 'en' },
+    })
+    const visual = generatePrompt(project).sections.find(
+      (section) => section.section === 'VISUAL DIRECTION',
+    )
+    expect(visual?.lines.join(' ')).toContain('cyberpunk style with bright neon')
   })
 
   it('meninggalkan bahagian SUBJECT apabila tiada subjek dipilih', () => {

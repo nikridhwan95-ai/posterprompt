@@ -1,10 +1,18 @@
 import { Controller, useFormContext } from 'react-hook-form'
-import { BACKGROUNDS, MOODS, STYLES, TEXT_CONTRASTS, TYPEFACES } from '@/data/styles'
+import {
+  BACKGROUNDS,
+  MOODS,
+  STYLES,
+  TEXT_CONTRASTS,
+  TYPEFACES,
+  styleGroupLabel,
+} from '@/data/styles'
 import { PALETTES } from '@/data/palettes'
 import { ColorPicker } from '@/components/ColorPicker'
 import { OptionGroup } from '@/components/OptionGroup'
 import { toChoices } from '@/components/choices'
 import { Toggle } from '@/components/OptionCard'
+import { StyleSwatch, TypefaceSpecimen } from '../swatches'
 import type { PosterProject } from '@/schemas/project'
 
 function Swatch({ colors }: { colors: readonly string[] }) {
@@ -40,7 +48,11 @@ export function StepStyle() {
             value={field.value}
             columns={3}
             onChange={field.onChange}
-            choices={toChoices(STYLES)}
+            choices={toChoices(
+              STYLES,
+              (style) => styleGroupLabel(style.group).ms,
+              (style) => <StyleSwatch id={style.id} />,
+            )}
             error={errors.style?.stylePreset?.message}
           />
         )}
@@ -150,7 +162,7 @@ export function StepStyle() {
             value={field.value}
             columns={3}
             onChange={field.onChange}
-            choices={toChoices(TYPEFACES)}
+            choices={toChoices(TYPEFACES, undefined, (face) => <TypefaceSpecimen id={face.id} />)}
             error={errors.typography?.titleTypeface?.message}
           />
         )}
@@ -166,7 +178,7 @@ export function StepStyle() {
             value={field.value}
             columns={3}
             onChange={field.onChange}
-            choices={toChoices(TYPEFACES)}
+            choices={toChoices(TYPEFACES, undefined, (face) => <TypefaceSpecimen id={face.id} />)}
             error={errors.typography?.bodyTypeface?.message}
           />
         )}

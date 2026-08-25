@@ -35,7 +35,7 @@ export function WizardStepper({ current, furthest, onSelect }: WizardStepperProp
                   isCurrent
                     ? 'bg-magenta-50 text-magenta-800'
                     : reachable
-                      ? 'text-ink-600 hover:bg-blue-50 hover:text-blue-700'
+                      ? 'text-ink-600 hover:bg-magenta-50 hover:text-magenta-700'
                       : 'cursor-not-allowed text-ink-500'
                 }`}
               >
@@ -45,7 +45,7 @@ export function WizardStepper({ current, furthest, onSelect }: WizardStepperProp
                     isCurrent
                       ? 'bg-magenta-500 text-white'
                       : isDone
-                        ? 'bg-blue-600 text-white'
+                        ? 'bg-magenta-700 text-white'
                         : 'bg-ink-200 text-ink-600'
                   }`}
                 >

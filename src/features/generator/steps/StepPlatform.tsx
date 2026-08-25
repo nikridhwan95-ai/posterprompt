@@ -103,6 +103,7 @@ export function StepPlatform() {
         rows={4}
         maxLength={MAX_CUSTOM_INSTRUCTIONS}
         counter={`${customInstructions.length} / ${MAX_CUSTOM_INSTRUCTIONS}`}
+        counterWarning={customInstructions.length >= MAX_CUSTOM_INSTRUCTIONS * 0.8}
         error={errors?.customInstructions?.message}
         placeholder="Contoh: Kekalkan ruang kosong di bahagian kiri untuk tampalan logo penaja."
         {...register('platform.customInstructions')}

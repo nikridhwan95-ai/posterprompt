@@ -29,6 +29,16 @@ describe('konflik reka bentuk (§10.3)', () => {
     expect(conflictIds(project)).not.toContain('conflict-minimalist-dense')
   })
 
+  it('memperlakukan gaya Swiss sebagai gaya minimalis', () => {
+    // Bendera `minimal` ialah satu-satunya sambungan antara katalog gaya dan
+    // peraturan ini; gaya berorientasi grid baharu mesti turut dilindungi.
+    const project = makeProject({
+      ...denseProject,
+      style: { ...denseProject.style, stylePreset: 'swiss' },
+    })
+    expect(conflictIds(project)).toContain('conflict-minimalist-dense')
+  })
+
   it('mengesan subjek kanan bertindih dengan kod QR kanan', () => {
     const project = makeProject({
       ...typicalProject,

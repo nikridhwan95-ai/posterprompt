@@ -10,6 +10,7 @@ import {
 } from '@/data/canvas'
 import { OptionGroup } from '@/components/OptionGroup'
 import { TextField } from '@/components/TextField'
+import { RatioThumb } from '../swatches'
 import type { PosterProject } from '@/schemas/project'
 
 /** Langkah 2: saiz kanvas, orientasi dan destinasi penerbitan (FR-005). */
@@ -57,6 +58,13 @@ export function StepCanvas() {
                 item.id === 'custom'
                   ? `Antara ${MIN_DIMENSION} dan ${MAX_DIMENSION} px setiap sisi`
                   : `${item.width} × ${item.height} px · ${item.ratio}`,
+              swatch: (
+                <RatioThumb
+                  width={item.width}
+                  height={item.height}
+                  custom={item.id === 'custom'}
+                />
+              ),
             }))}
             error={errors?.preset?.message}
           />

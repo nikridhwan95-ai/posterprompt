@@ -96,6 +96,83 @@ describe('wizard — dimensi tersuai tidak sah (UAT-03, FR-005)', () => {
   })
 })
 
+describe('wizard — kaunter aksara (§5.5)', () => {
+  it('menyembunyikan kaunter sehingga medan difokus', async () => {
+    const { user } = renderApp()
+    // Sebelum sebarang fokus, tiada "0 / 500" statik memenuhi borang.
+    expect(screen.queryByText('0 / 120')).not.toBeInTheDocument()
+    expect(screen.queryByText('0 / 500')).not.toBeInTheDocument()
+
+    await user.click(screen.getByLabelText(/^Tajuk utama/))
+    expect(screen.getByText('0 / 120')).toBeInTheDocument()
+  })
+
+  it('mengekalkan kaunter tanpa fokus apabila had hampir dicecah', async () => {
+    const { user } = renderApp()
+    const headline = screen.getByLabelText(/^Tajuk utama/)
+    await user.click(headline)
+    await user.paste('A'.repeat(100))
+    // Alih fokus ke medan lain: kaunter tajuk kekal kerana 100 ≥ 80% × 120.
+    await user.click(screen.getByLabelText(/^Nama program/))
+    expect(screen.getByText('100 / 120')).toBeInTheDocument()
+  })
+})
+
+describe('wizard — pratonton zon di langkah susun atur (FR-023)', () => {
+  it('memaparkan pratonton zon bersebelahan pilihan komposisi', async () => {
+    const { user } = renderApp()
+    await fill(user, /^Tajuk utama/, 'MAJLIS PERASMIAN')
+    await fill(user, /^Nama program/, 'Program Mesra Siswa')
+    await fill(user, /^Tarikh/, '1 September 2026')
+    await nextStep(user)
+    await screen.findByRole('heading', { name: 'Kanvas' })
+    await nextStep(user)
+    await screen.findByRole('heading', { name: 'Gaya' })
+    await nextStep(user)
+    await screen.findByRole('heading', { name: 'Susun atur' })
+
+    expect(screen.getByRole('heading', { name: 'Pratonton zon' })).toBeInTheDocument()
+    // Rangka zon dirender sebagai imej boleh akses dengan penerangan zon.
+    expect(screen.getAllByRole('img', { name: /Rangka susun atur poster/ }).length).toBeGreaterThan(0)
+  })
+})
+
+describe('wizard — pemilih gaya (FR-006)', () => {
+  async function goToStyleStep(user: ReturnType<typeof renderApp>['user']) {
+    await fill(user, /^Tajuk utama/, 'MAJLIS PERASMIAN')
+    await fill(user, /^Nama program/, 'Program Mesra Siswa')
+    await fill(user, /^Tarikh/, '1 September 2026')
+    await nextStep(user)
+    await screen.findByRole('heading', { level: 1, name: 'Kanvas' })
+    await nextStep(user)
+    await screen.findByRole('heading', { level: 1, name: 'Gaya' })
+  }
+
+  it('mengumpulkan katalog gaya yang panjang di bawah sub-tajuk', async () => {
+    const { user } = renderApp()
+    await goToStyleStep(user)
+
+    for (const group of ['Asas dan struktur', 'Digital dan futuristik', 'Warisan tempatan']) {
+      expect(screen.getByText(group)).toBeInTheDocument()
+    }
+  })
+
+  it('membenarkan gaya baharu dipilih sebagai satu-satunya gaya aktif', async () => {
+    const { user } = renderApp()
+    await goToStyleStep(user)
+
+    const cyberpunk = screen.getByRole('radio', { name: /Cyberpunk/ })
+    const corporate = screen.getByRole('radio', { name: /Korporat/ })
+    expect(corporate).toBeChecked()
+
+    await user.click(cyberpunk)
+    expect(cyberpunk).toBeChecked()
+    // Radio berkongsi satu nama, jadi pilihan terdahulu terbatal walaupun ia
+    // berada dalam kumpulan paparan yang berlainan (QA-04).
+    expect(corporate).not.toBeChecked()
+  })
+})
+
 describe('wizard — kembali menyunting tanpa kehilangan input (UAT-07, FR-019)', () => {
   it('mengekalkan teks apabila pengguna kembali ke langkah sebelumnya', async () => {
     const { user } = renderApp()

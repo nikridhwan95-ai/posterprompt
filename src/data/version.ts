@@ -8,7 +8,7 @@
  *                   regression boleh dikesan (§11.4).
  */
 export const SCHEMA_VERSION = '1.0' as const
-export const TEMPLATE_VERSION = '1.0.0' as const
+export const TEMPLATE_VERSION = '1.1.0' as const
 
 /** Versi aplikasi yang dipaparkan pada footer. */
 export const APP_VERSION = '1.0.0' as const

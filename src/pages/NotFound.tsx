@@ -17,7 +17,7 @@ export function NotFound() {
         </Link>
         <Link
           to="/"
-          className="rounded-lg border border-[var(--color-control)] bg-white px-4 py-2.5 text-sm font-semibold text-ink-800 hover:border-blue-600 hover:text-blue-700"
+          className="rounded-lg border border-[var(--color-control)] bg-white px-4 py-2.5 text-sm font-semibold text-ink-800 hover:border-magenta-500 hover:text-magenta-700"
         >
           Laman utama
         </Link>
